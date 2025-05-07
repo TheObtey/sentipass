@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
 object RetrofitClient {
-    private const val BASE_URL = "https://sentipass.obtey.fr/api"
+    private const val BASE_URL = "https://sentipass.obtey.fr/api/"
 
     val api: ApiService by lazy {
         Retrofit.Builder()
