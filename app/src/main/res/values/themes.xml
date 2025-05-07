@@ -1,5 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Sentipass" parent="Theme.Material3.DayNight" />
+    <style name="Theme.Sentipass" parent="Base.Theme.Sentipass" />
 
-    <style name="Theme.Sentipass" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="AppNameTextStyle">
+        <item name="android:textSize">38sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/play_bold</item>
+    </style>
+
+    <style name="HeaderTextStyle">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/play_bold</item>
+    </style>
+
+    <!-- Create default text component -->
+    <style name="DefaultTextStyle">
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/play_regular</item>
+    </style>
+
+    <!-- Create password details component -->
+    <style name="PasswordDetailsTitleStyle" parent="DefaultTextStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/play_bold</item>
+    </style>
+
+    <style name="PasswordDetailsSubtitleStyle" parent="PasswordDetailsTitleStyle">
+        <item name="android:fontFamily">@font/play_regular</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <!-- Create categories name text component -->
+    <style name="CategoryNameTextStyle" parent="DefaultTextStyle">
+        <item name="android:fontFamily">@font/play_bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Create default subtitle component -->
+    <style name="SubtitleTextStyle" parent="DefaultTextStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/play_bold</item>
+    </style>
+
+    <!-- Create default subtitle component -->
+    <style name="TitleTextStyle" parent="SubtitleTextStyle">
+        <item name="android:textSize">24sp</item>
+    </style>
 </resources>

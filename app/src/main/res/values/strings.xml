@@ -1,3 +1,73 @@
 <resources>
-    <string name="app_name">Sentipass</string>
+    <string name="app_name">SENTIPASS</string>
+
+    <!-- Buttons -->
+    <string name="button_get_started">GET STARTED</string>
+    <string name="button_submit">SUBMIT</string>
+    <string name="button_create_new_account">create new account</string>
+    <string name="button_existing_account">already have an account</string>
+    <string name="button_edit_password">edit</string>
+
+    <!-- Entries -->
+    <string name="entry_service">service</string>
+    <string name="entry_service_input">@string/service</string>
+    <string name="service">service</string>
+
+    <string name="entry_website">website</string>
+    <string name="entry_website_input">@string/website</string>
+    <string name="website">https://example.com</string>
+
+    <string name="entry_username">username</string>
+    <string name="entry_username_input">@string/username</string>
+    <string name="username">user</string>
+
+    <string name="entry_password">password</string>
+    <string name="entry_password_input">@string/password</string>
+    <string name="password">password</string>
+
+    <string name="entry_email">email</string>
+    <string name="entry_email_input">@string/email</string>
+    <string name="email">email</string>
+
+    <string name="entry_search_bar_hint">Search here\.\.\.</string>
+    <string name="entry_search_bar_input">@string/research</string>
+    <string name="research">Search here\.\.\.</string>
+
+    <!-- Home page -->
+    <string name="home_page_category">Category</string>
+    <string name="home_page_most_recent">Most Recent</string>
+    <string name="home_page_no_result">No result</string>
+
+    <!-- Save account popup -->
+    <string name="save_account_popup_title">Save new account</string>
+
+    <!-- Password popup -->
+    <string name="password_popup_title">Title</string>
+    <string name="password_popup_back">back</string>
+    <string name="password_popup_edit">edit</string>
+
+    <string name="password_popup_email_title">Email / Username</string>
+    <string name="password_popup_email_subtitle">example@gmail.com</string>
+
+    <string name="password_popup_password_title">Password</string>
+    <string name="password_popup_password_subtitle">**********</string>
+
+    <string name="password_popup_password_strength_title">Password Health</string>
+    <string name="password_popup_password_strength_subtitle">Weak Password</string>
+
+    <string name="password_popup_website_title">Website</string>
+    <string name="password_popup_website_subtitle">https://example.com</string>
+
+    <!-- Tool page -->
+    <string-array name="tool_page_name">
+        <item>Password Generator</item>
+        <item>Password Health</item>
+        <item>Export Passwords</item>
+    </string-array>
+
+    <string-array name="tool_page_password_strength">
+        <item>Weak Password</item>
+        <item>Moderate Password</item>
+        <item>Strong Password</item>
+    </string-array>
 </resources>
