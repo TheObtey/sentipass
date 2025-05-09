@@ -62,7 +62,6 @@ val TitleTextStyle = SubtitleTextStyle.copy(
     fontSize = 24.sp
 )
 
-// Pour MaterialTheme.typography si tu veux les brancher par défaut
 val Typography = Typography(
     bodyLarge = DefaultTextStyle,
     headlineMedium = TitleTextStyle
