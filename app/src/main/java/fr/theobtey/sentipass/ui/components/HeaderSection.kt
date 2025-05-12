@@ -38,7 +38,7 @@ fun HeaderSection() {
         }
 
         IconButton(onClick = { /* TODO : Profil utilisateur */ }) {
-            Icon(
+            Image(
                 painter = painterResource(R.drawable.ic_user),
                 contentDescription = "Profile",
                 modifier = Modifier.size(48.dp)
