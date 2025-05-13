@@ -8,4 +8,10 @@ import retrofit2.http.POST
 interface ApiService {
     @POST("login")
     suspend fun login(@Body request: LoginRequest): LoginResponse
+
+    @POST("add-password")
+    suspend fun addPassword(
+        @Body passwordRequest: PasswordRequest,
+        @Header("Authorization") token: String
+    ): Response<Unit>
 }
