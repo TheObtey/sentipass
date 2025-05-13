@@ -110,26 +110,24 @@ fun AddPasswordDialog(
                 isRequired = false
             )
 
-
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
                 onClick = {
-                    if (service.isBlank() || password.isBlank()) {
-                        println("You must fill required fields")
-                        return@Button
+                    if (service.isNotBlank() && password.isNotBlank()) {
+                        val request = PasswordRequest(
+                            service = service,
+                            url = url,
+                            email = email,
+                            username = username,
+                            password = password,
+                            note = note
+                        )
+
+                        viewModel.addPassword(request, token)
+                    } else {
+                        println("You must fill all required fields")
                     }
-
-                    val request = PasswordRequest(
-                        service = service,
-                        url = url,
-                        email = email,
-                        username = username,
-                        password = password,
-                        note = note
-                    )
-
-                    viewModel.addPassword(request, token)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Complementary)
@@ -139,21 +137,15 @@ fun AddPasswordDialog(
                     style = PasswordDetailsTitleStyle
                 )
             }
+        }
+    }
 
-            when (state) {
-                is AddPasswordState.Success -> {
-                    println("Password added successfully!")
-                    viewModel.resetState()
-                    onDismiss()
-                }
-                is AddPasswordState.Error -> {
-                    println("Error during save: ${(state as AddPasswordState.Error).message}")
-                }
-                is AddPasswordState.Loading -> {
-                    /* TODO: Show a loading screen */
-                }
-                AddPasswordState.Idle -> {}
-            }
+    LaunchedEffect(state) {
+        if (state is AddPasswordState.Success) {
+            println("Password successfully saved, refreshing the list")
+            viewModel.fetchPasswords(token)
+            viewModel.resetState()
+            onDismiss()
         }
     }
 }
