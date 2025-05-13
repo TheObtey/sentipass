@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import fr.theobtey.sentipass.ui.components.BottomBar
 import fr.theobtey.sentipass.ui.components.CategoriesSection
 import fr.theobtey.sentipass.ui.components.HeaderSection
 import fr.theobtey.sentipass.ui.components.PasswordListSection
@@ -40,11 +41,10 @@ fun HomeScreen() {
             PasswordListSection()
 
             Spacer(modifier = Modifier.height(80.dp))
-
         }
 
         // AddButton(modifier = Modifier.align(Alignment.BottomEnd).padding(24.dp))
 
-        // BottomBar(modifier = Modifier.align(Alignment.BottomCenter))
+        BottomBar(modifier = Modifier.align(Alignment.BottomCenter))
     }
 }
