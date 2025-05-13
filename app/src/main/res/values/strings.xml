@@ -42,10 +42,6 @@
     <string name="save_account_popup_title">Save new account</string>
 
     <!-- Password popup -->
-    <string name="password_popup_title">Title</string>
-    <string name="password_popup_back">back</string>
-    <string name="password_popup_edit">edit</string>
-
     <string name="password_popup_email_title">Email / Username</string>
     <string name="password_popup_email_subtitle">example@gmail.com</string>
 
@@ -70,4 +66,80 @@
         <item>Moderate Password</item>
         <item>Strong Password</item>
     </string-array>
+
+
+
+
+    <!-- Buttons -->
+    <string-array name="buttons">
+        <item>GET STARTED</item> <!-- buttons[0] -->
+        <item>SUBMIT</item> <!-- buttons[1] -->
+        <item>Create new account</item> <!-- buttons[2] -->
+        <item>Already have an account</item> <!-- buttons[3] -->
+        <item>Edit</item> <!-- buttons[4] -->
+        <item>SAVE PASSWORD</item> <!-- buttons[5] -->
+    </string-array>
+
+    <!-- Form Fields: Titles and Default values -->
+    <string-array name="form_fields_labels">
+        <item>Add new password</item> <!-- form_fields_labels[0] -->
+        <item>Service</item> <!-- form_fields_labels[0] -->
+        <item>Website</item> <!-- form_fields_labels[1] -->
+        <item>Username</item> <!-- form_fields_labels[2] -->
+        <item>Password</item> <!-- form_fields_labels[3] -->
+        <item>Email</item> <!-- form_fields_labels[4] -->
+    </string-array>
+
+    <string-array name="form_fields_defaults">
+        <item>service</item> <!-- form_fields_defaults[0] -->
+        <item>https://example.com</item> <!-- form_fields_defaults[1] -->
+        <item>user</item> <!-- form_fields_defaults[2] -->
+        <item>email</item> <!-- form_fields_defaults[3] -->
+        <item>password</item> <!-- form_fields_defaults[4] -->
+    </string-array>
+
+    <!-- Search Bar -->
+    <string name="search_hint">Search here...</string>
+
+    <!-- Home Page -->
+    <string name="home_category">Category</string>
+    <string name="home_most_recent">Most Recent</string>
+    <string name="home_no_result">No result</string>
+
+    <!-- Save Account Popup -->
+    <string name="save_account_title">Save new account</string>
+
+    <!-- Password Detail Popup -->
+    <string name="password_popup_title">Title</string>
+    <string name="password_popup_back">Back</string>
+    <string name="password_popup_edit">Edit</string>
+
+    <string-array name="password_popup_sections_titles">
+        <item>Email / Username</item> <!-- [0] -->
+        <item>Password</item> <!-- [1] -->
+        <item>Password Health</item> <!-- [2] -->
+        <item>Website</item> <!-- [3] -->
+    </string-array>
+
+    <string-array name="password_popup_sections_subtitles">
+        <item>example@gmail.com</item> <!-- [0] -->
+        <item>**********</item> <!-- [1] -->
+        <item>Weak Password</item> <!-- [2] -->
+        <item>https://example.com</item> <!-- [3] -->
+    </string-array>
+
+    <!-- Tool Page -->
+    <string-array name="tool_page_options">
+        <item>Password Generator</item>
+        <item>Password Health</item>
+        <item>Export Passwords</item>
+    </string-array>
+
+    <string-array name="password_strength_levels">
+        <item>Weak Password</item>
+        <item>Moderate Password</item>
+        <item>Strong Password</item>
+    </string-array>
+
+
 </resources>

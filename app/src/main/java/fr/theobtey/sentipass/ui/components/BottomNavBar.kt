@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -27,9 +28,13 @@ fun BottomBar(modifier: Modifier = Modifier) {
 
     Row(
         modifier = modifier
+            .padding(horizontal = 24.dp, vertical = 24.dp)
             .fillMaxWidth()
-            .height(90.dp)
-            .background(Secondary),
+            .height(80.dp)
+            .background(
+                color = Secondary,
+                shape = RoundedCornerShape(24.dp)
+            ),
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {

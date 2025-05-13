@@ -40,12 +40,19 @@ val DefaultTextStyle = TextStyle(
 
 val PasswordDetailsTitleStyle = DefaultTextStyle.copy(
     fontWeight = FontWeight.Bold,
-    fontSize = 14.sp
+    fontSize = 18.sp,
+    color = White
 )
 
 val PasswordDetailsSubtitleStyle = PasswordDetailsTitleStyle.copy(
     fontWeight = FontWeight.Normal,
-    color = White
+    fontSize = 14.sp,
+    color = Gray
+)
+
+val PasswordDetailsStrengthStyle = PasswordDetailsSubtitleStyle.copy(
+    fontSize = 14.sp,
+    color = Gray
 )
 
 val CategoryNameTextStyle = DefaultTextStyle.copy(

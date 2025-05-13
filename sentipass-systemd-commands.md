@@ -1,6 +1,6 @@
 # 📦 Commandes utiles – API SentiPass (systemd)
 
-Voici une liste complète des commandes pratiques pour gérer le service systemd de ton API Node.js (`sentipass-api`), directement sur ton VPS.
+Voici une liste complète des commandes pratiques pour gérer le service systemd de l'API Node.js (`sentipass-api`), directement sur le VPS.
 
 ---
 
@@ -88,4 +88,4 @@ sudo systemctl disable sentipass-api
 
 ---
 
-Pense à relancer `sudo systemctl daemon-reload` si tu modifies le fichier du service.
+Relancer `sudo systemctl daemon-reload` si modification du fichier du service.

@@ -62,7 +62,7 @@ fun PasswordListSection() {
 
         Box(
             modifier = Modifier
-                .height(400.dp)
+                .height(420.dp)
                 .padding(start = 16.dp, end = 16.dp)
         ) {
             LazyColumn(
