@@ -16,10 +16,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.theobtey.sentipass.R
+import fr.theobtey.sentipass.data.model.PasswordRequest
 import fr.theobtey.sentipass.ui.theme.*
+import fr.theobtey.sentipass.viewmodel.AddPasswordState
+import fr.theobtey.sentipass.viewmodel.PasswordViewModel
 
 @Composable
-fun AddPasswordDialog(onDismiss: () -> Unit) {
+fun AddPasswordDialog(
+    onDismiss: () -> Unit,
+    viewModel: PasswordViewModel,
+    token: String
+) {
+    val state by viewModel.state.collectAsState()
+
     val context = LocalContext.current
     val placeholders = context.resources.getStringArray(R.array.form_fields_defaults)
 
@@ -28,6 +37,7 @@ fun AddPasswordDialog(onDismiss: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var note by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
@@ -62,23 +72,25 @@ fun AddPasswordDialog(onDismiss: () -> Unit) {
                 value = service,
                 onValueChange = { service = it },
                 placeholder = placeholders[0],
-                isRequired = false
+                isRequired = true
             )
             CustomTextField(
                 value = url,
                 onValueChange = { url = it },
-                placeholder = placeholders[1]
-            )
-            CustomTextField(
-                value = username,
-                onValueChange = { username = it },
-                placeholder = placeholders[2]
+                placeholder = placeholders[1],
+                isRequired = false
             )
             CustomTextField(
                 value = email,
                 onValueChange = { email = it },
                 placeholder = placeholders[3],
-                isRequired = true
+                isRequired = false
+            )
+            CustomTextField(
+                value = username,
+                onValueChange = { username = it },
+                placeholder = placeholders[2],
+                isRequired = false
             )
             CustomTextField(
                 value = password,
@@ -91,11 +103,34 @@ fun AddPasswordDialog(onDismiss: () -> Unit) {
                     Text(text = strengthText, color = strengthColor, style = PasswordDetailsStrengthStyle, modifier = Modifier.padding(end = 8.dp))
                 }
             )
+            CustomTextField(
+                value = note,
+                onValueChange = { note = it },
+                placeholder = placeholders[4],
+                isRequired = false
+            )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { /* TODO: Save the password */ },
+                onClick = {
+                    if (service.isBlank() || password.isBlank()) {
+                        println("You must fill required fields")
+                        return@Button
+                    }
+
+                    val request = PasswordRequest(
+                        service = service,
+                        url = url,
+                        email = email,
+                        username = username,
+                        password = password,
+                        note = note
+                    )
+
+                    viewModel.addPassword(request, token)
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Complementary)
             ) {
@@ -103,6 +138,21 @@ fun AddPasswordDialog(onDismiss: () -> Unit) {
                     text = context.resources.getStringArray(R.array.buttons)[5],
                     style = PasswordDetailsTitleStyle
                 )
+            }
+
+            when (state) {
+                is AddPasswordState.Success -> {
+                    println("Password added successfully!")
+                    viewModel.resetState()
+                    onDismiss()
+                }
+                is AddPasswordState.Error -> {
+                    println("Error during save: ${(state as AddPasswordState.Error).message}")
+                }
+                is AddPasswordState.Loading -> {
+                    /* TODO: Show a loading screen */
+                }
+                AddPasswordState.Idle -> {}
             }
         }
     }

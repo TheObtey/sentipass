@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import fr.theobtey.sentipass.data.model.PasswordResponse
 import fr.theobtey.sentipass.ui.theme.DefaultTextStyle
 import fr.theobtey.sentipass.ui.theme.Primary
 import fr.theobtey.sentipass.ui.theme.SubtitleTextStyle
@@ -31,26 +32,8 @@ data class PasswordItem(
     val iconRes: Int
 )
 
-private val passwordList = listOf(
-    PasswordItem("Gmail", "example@gmail.com", R.drawable.ic_email),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Google", "example@gmail.com", R.drawable.ic_google),
-    PasswordItem("Discord", "example@gmail.com", R.drawable.ic_discord),
-    PasswordItem("ChatGPT", "example@gmail.com", R.drawable.ic_openai),
-    PasswordItem("Spotify", "example@gmail.com", R.drawable.ic_spotify),
-    PasswordItem("Figma", "example@gmail.com", R.drawable.ic_figma)
-)
-
 @Composable
-fun PasswordListSection() {
+fun PasswordListSection(passwords: List<PasswordResponse>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.home_page_most_recent),
@@ -59,7 +42,6 @@ fun PasswordListSection() {
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         Box(
             modifier = Modifier
                 .height(420.dp)
@@ -71,17 +53,17 @@ fun PasswordListSection() {
                     .fillMaxSize()
                     .padding(end = 8.dp)
             ) {
-                items(passwordList) { item ->
+                items(passwords) { item ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .height(38.dp)
+                            .height(48.dp)
                             .fillMaxWidth()
-                            .clickable { /* TODO : Ouvrir les détails */ }
+                            .clickable { /* TODO: Show details card */ }
                     ) {
                         Image(
-                            painter = painterResource(item.iconRes),
-                            contentDescription = item.name,
+                            painter = painterResource(R.drawable.ic_password),
+                            contentDescription = item.service,
                             modifier = Modifier.size(32.dp)
                         )
 
@@ -89,11 +71,11 @@ fun PasswordListSection() {
 
                         Column {
                             Text(
-                                text = item.name,
+                                text = item.service,
                                 style = DefaultTextStyle
                             )
                             Text(
-                                text = item.username,
+                                text = item.email ?: item.username?: "",
                                 style = DefaultTextStyle
                             )
                         }

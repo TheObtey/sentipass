@@ -2,12 +2,13 @@ package fr.theobtey.sentipass.ui.navigation
 
 import LoginScreen
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import fr.theobtey.sentipass.ui.screens.HomeScreen
+import java.net.URLDecoder
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 @Composable
 fun AppNavHost(
@@ -23,8 +24,13 @@ fun AppNavHost(
             )
         }
 
-        composable("home") {
-            HomeScreen()
+        composable(
+            "home/{token}",
+            arguments = listOf(navArgument("token") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val encoded = backStackEntry.arguments?.getString("token") ?: ""
+            val token = URLDecoder.decode(encoded, "UTF-8")
+            HomeScreen(token = token)
         }
     }
 }

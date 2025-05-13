@@ -5,6 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import fr.theobtey.sentipass.R
+import fr.theobtey.sentipass.data.network.RetrofitClient
+import fr.theobtey.sentipass.repository.PasswordRepository
 import fr.theobtey.sentipass.ui.components.AddPasswordDialog
 import fr.theobtey.sentipass.ui.components.BottomBar
 import fr.theobtey.sentipass.ui.components.CategoriesSection
@@ -22,11 +26,19 @@ import fr.theobtey.sentipass.ui.components.PasswordListSection
 import fr.theobtey.sentipass.ui.components.SearchSection
 import fr.theobtey.sentipass.ui.theme.Complementary
 import fr.theobtey.sentipass.ui.theme.Primary
-import fr.theobtey.sentipass.ui.theme.White
+import fr.theobtey.sentipass.viewmodel.PasswordViewModel
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(token: String) {
+    val repository = remember { PasswordRepository(RetrofitClient.api) }
+    val passwordViewModel = remember { PasswordViewModel(repository) }
     var showAddPasswordDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        passwordViewModel.fetchPasswords(token)
+    }
+
+    val passwords by passwordViewModel.passwords.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +61,7 @@ fun HomeScreen() {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            PasswordListSection()
+            PasswordListSection(passwords = passwords)
         }
 
         FloatingActionButton(
@@ -70,7 +82,10 @@ fun HomeScreen() {
         BottomBar(modifier = Modifier.align(Alignment.BottomCenter))
 
         if (showAddPasswordDialog) {
-            AddPasswordDialog(onDismiss = { showAddPasswordDialog = false })
+            AddPasswordDialog(
+                onDismiss = { showAddPasswordDialog = false },
+                viewModel = passwordViewModel,
+                token = token)
         }
     }
 }
