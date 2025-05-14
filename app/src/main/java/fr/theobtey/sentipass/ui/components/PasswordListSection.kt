@@ -1,6 +1,10 @@
 package fr.theobtey.sentipass.ui.components
 
-import androidx.compose.foundation.Image
+import fr.theobtey.sentipass.R
+import fr.theobtey.sentipass.data.model.PasswordResponse
+import fr.theobtey.sentipass.ui.theme.DefaultTextStyle
+import fr.theobtey.sentipass.ui.theme.Primary
+import fr.theobtey.sentipass.ui.theme.White
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,24 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import fr.theobtey.sentipass.R
-import fr.theobtey.sentipass.ui.theme.Gray
-import fr.theobtey.sentipass.ui.theme.White
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import fr.theobtey.sentipass.data.model.PasswordResponse
-import fr.theobtey.sentipass.ui.theme.DefaultTextStyle
-import fr.theobtey.sentipass.ui.theme.Primary
-import fr.theobtey.sentipass.ui.theme.SubtitleTextStyle
-import fr.theobtey.sentipass.ui.theme.TitleTextStyle
+import coil.compose.AsyncImage
 
 data class PasswordItem(
     val name: String,
-    val username: String,
-    val iconRes: Int
+    val username: String
 )
 
 @Composable
@@ -61,10 +56,12 @@ fun PasswordListSection(passwords: List<PasswordResponse>) {
                             .fillMaxWidth()
                             .clickable { /* TODO: Show details card */ }
                     ) {
-                        Image(
-                            painter = painterResource(R.drawable.ic_password),
+                        AsyncImage(
+                            model = "https://www.google.com/s2/favicons?sz=64&domain_url=${item.url}",
                             contentDescription = item.service,
-                            modifier = Modifier.size(32.dp)
+                            modifier = Modifier.size(32.dp),
+                            error = painterResource(R.drawable.ic_password),
+                            fallback = painterResource(R.drawable.ic_password)
                         )
 
                         Spacer(modifier = Modifier.width(12.dp))
