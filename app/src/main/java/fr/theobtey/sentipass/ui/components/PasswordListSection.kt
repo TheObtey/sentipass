@@ -28,7 +28,10 @@ data class PasswordItem(
 )
 
 @Composable
-fun PasswordListSection(passwords: List<PasswordResponse>) {
+fun PasswordListSection(
+    passwords: List<PasswordResponse>,
+    onPasswordClick: (PasswordResponse) -> Unit
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.home_page_most_recent),
@@ -54,7 +57,7 @@ fun PasswordListSection(passwords: List<PasswordResponse>) {
                         modifier = Modifier
                             .height(48.dp)
                             .fillMaxWidth()
-                            .clickable { /* TODO: Show details card */ }
+                            .clickable { onPasswordClick(item) }
                     ) {
                         AsyncImage(
                             model = "https://www.google.com/s2/favicons?sz=64&domain_url=${item.url}",
