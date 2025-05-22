@@ -24,4 +24,3 @@ fun getPasswordStrength(password: String): Pair<String, Int> {
         else -> "Strong password" to R.color.flashy_green
     }
 }
-

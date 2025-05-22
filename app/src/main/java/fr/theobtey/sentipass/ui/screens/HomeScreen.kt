@@ -96,7 +96,9 @@ fun HomeScreen(token: String) {
         if (selectedPassword != null) {
             PasswordDetailsDialog(
                 password = selectedPassword!!,
-                onClose = { selectedPassword = null }
+                onClose = { selectedPassword = null },
+                onCopy = { value -> println("Copié : $value") },
+                onEdit = { password -> println("Éditer le mot de passe : ${password.service}") }
             )
         }
 
