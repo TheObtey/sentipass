@@ -16,12 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import fr.theobtey.sentipass.R
+import fr.theobtey.sentipass.data.model.PasswordResponse
 import fr.theobtey.sentipass.data.network.RetrofitClient
 import fr.theobtey.sentipass.repository.PasswordRepository
 import fr.theobtey.sentipass.ui.components.AddPasswordDialog
 import fr.theobtey.sentipass.ui.components.BottomBar
 import fr.theobtey.sentipass.ui.components.CategoriesSection
 import fr.theobtey.sentipass.ui.components.HeaderSection
+import fr.theobtey.sentipass.ui.components.PasswordDetailsDialog
 import fr.theobtey.sentipass.ui.components.PasswordListSection
 import fr.theobtey.sentipass.ui.components.SearchSection
 import fr.theobtey.sentipass.ui.theme.Complementary
@@ -33,6 +35,7 @@ fun HomeScreen(token: String) {
     val repository = remember { PasswordRepository(RetrofitClient.api) }
     val passwordViewModel = remember { PasswordViewModel(repository) }
     var showAddPasswordDialog by remember { mutableStateOf(false) }
+    var selectedPassword by remember { mutableStateOf<PasswordResponse?>(null) }
 
     LaunchedEffect(Unit) {
         passwordViewModel.fetchPasswords(token)
@@ -61,7 +64,10 @@ fun HomeScreen(token: String) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            PasswordListSection(passwords = passwords)
+            PasswordListSection(
+                passwords = passwords,
+                onPasswordClick = { selectedPassword = it }
+            )
         }
 
         FloatingActionButton(
@@ -87,5 +93,12 @@ fun HomeScreen(token: String) {
                 viewModel = passwordViewModel,
                 token = token)
         }
+        if (selectedPassword != null) {
+            PasswordDetailsDialog(
+                password = selectedPassword!!,
+                onClose = { selectedPassword = null }
+            )
+        }
+
     }
 }
