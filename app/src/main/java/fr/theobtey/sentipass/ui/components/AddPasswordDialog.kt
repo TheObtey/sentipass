@@ -95,7 +95,7 @@ fun AddPasswordDialog(
             CustomTextField(
                 value = password,
                 onValueChange = { password = it },
-                placeholder = placeholders[4],
+                placeholder = placeholders[5],
                 isRequired = true,
                 trailingContent = {
                     val (strengthText, colorRes) = getPasswordStrength(password)

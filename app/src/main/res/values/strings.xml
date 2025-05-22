@@ -96,6 +96,7 @@
         <item>user</item> <!-- form_fields_defaults[2] -->
         <item>email</item> <!-- form_fields_defaults[3] -->
         <item>password</item> <!-- form_fields_defaults[4] -->
+        <item>notes</item> <!-- form_fields_defaults[5] -->
     </string-array>
 
     <!-- Search Bar -->
