@@ -1,4 +1,3 @@
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,12 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,20 +20,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.ui.theme.AppNameTextStyle
 import fr.theobtey.sentipass.ui.theme.Complementary
 import fr.theobtey.sentipass.ui.theme.DefaultTextStyle
-import fr.theobtey.sentipass.ui.theme.HeaderTextStyle
 import fr.theobtey.sentipass.ui.theme.Primary
-import fr.theobtey.sentipass.ui.theme.SubtitleTextStyle
 import fr.theobtey.sentipass.ui.theme.TitleTextStyle
 import fr.theobtey.sentipass.ui.theme.White
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+
 
 @Composable
 fun LoginScreen(
@@ -94,6 +87,7 @@ fun LoginScreen(
                 onValueChange = { password = it },
                 label = { Text(stringResource(R.string.entry_password), style = DefaultTextStyle) },
                 singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
 
