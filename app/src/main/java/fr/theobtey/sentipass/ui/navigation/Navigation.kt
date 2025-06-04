@@ -1,6 +1,7 @@
 package fr.theobtey.sentipass.ui.navigation
 
 import LoginScreen
+import fr.theobtey.sentipass.ui.screens.RegisterScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -14,13 +15,21 @@ import androidx.navigation.navArgument
 fun AppNavHost(
     navController: NavHostController,
     startDestination: String = "login",
-    onLogin: (String, String) -> Unit
+    onLogin: (String, String) -> Unit,
+    onRegister: (String, String) -> Unit
 ) {
     NavHost(navController = navController, startDestination = startDestination) {
         composable("login") {
             LoginScreen(
                 onLoginClick = { username, password -> onLogin(username, password) },
-                onGoToRegister = {  }
+                onGoToRegister = { navController.navigate("register") }
+            )
+        }
+
+        composable("register") {
+            RegisterScreen(
+                onRegisterClick = { username, password -> onRegister(username, password) },
+                onGoToLogin = { navController.popBackStack() }
             )
         }
 
