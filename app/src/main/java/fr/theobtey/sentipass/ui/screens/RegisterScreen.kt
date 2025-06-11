@@ -91,7 +91,7 @@ fun RegisterScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = Complementary)
             ) {
                 Text(
-                    text = stringResource(R.string.button_submit),
+                    text = stringResource(R.string.button_get_started),
                     style = TitleTextStyle,
                     color = White
                 )
