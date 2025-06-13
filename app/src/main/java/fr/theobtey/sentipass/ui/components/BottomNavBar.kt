@@ -52,12 +52,6 @@ fun BottomBar(
             }
         )
         BottomBarItem(
-            icon = R.drawable.ic_password,
-            label = "Passwords",
-            selected = currentRoute.startsWith("passwords"),
-            onClick = { /* TODO: Implement passwords navigation */ }
-        )
-        BottomBarItem(
             icon = R.drawable.ic_tools,
             label = "Tools",
             selected = currentRoute.startsWith("tools"),
