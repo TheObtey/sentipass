@@ -1,5 +1,6 @@
 package fr.theobtey.sentipass.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -13,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import fr.theobtey.sentipass.R
@@ -23,6 +25,8 @@ import fr.theobtey.sentipass.ui.components.*
 import fr.theobtey.sentipass.ui.theme.*
 import fr.theobtey.sentipass.viewmodel.PasswordViewModel
 import androidx.navigation.NavController
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 
 @Composable
 fun HomeScreen(
@@ -34,6 +38,9 @@ fun HomeScreen(
     var showAddPasswordDialog by remember { mutableStateOf(false) }
     var selectedPassword by remember { mutableStateOf<PasswordResponse?>(null) }
     var showCategories by remember { mutableStateOf(true) }
+    var showDisconnectDialog by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         passwordViewModel.fetchPasswords(token)
@@ -50,11 +57,14 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            HeaderSection()
+            HeaderSection(onProfileClick = { showDisconnectDialog = true })
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SearchSection(onFilterClick = { showCategories = !showCategories })
+            SearchSection(
+                onFilterClick = { showCategories = !showCategories },
+                onSearch = { searchQuery = it }
+            )
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -64,7 +74,11 @@ fun HomeScreen(
             }
 
             PasswordListSection(
-                passwords = passwords,
+                passwords = passwords.filter { password ->
+                    password.service.contains(searchQuery, ignoreCase = true) ||
+                    (password.email?.contains(searchQuery, ignoreCase = true) ?: false) ||
+                    (password.username?.contains(searchQuery, ignoreCase = true) ?: false)
+                },
                 onPasswordClick = { selectedPassword = it },
                 isCategoryVisible = showCategories
             )
@@ -104,6 +118,27 @@ fun HomeScreen(
                 onClose = { selectedPassword = null },
                 onCopy = { value -> println("Copié : $value") },
                 onEdit = { password -> println("Éditer le mot de passe : ${password.service}") }
+            )
+        }
+        if (showDisconnectDialog) {
+            DisconnectDialog(
+                onDismiss = { showDisconnectDialog = false },
+                onDisconnect = {
+                    // Remove all data from EncryptedSharedPreferences
+                    val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+                    val sharedPreferences = EncryptedSharedPreferences.create(
+                        "sentipass_prefs",
+                        masterKeyAlias,
+                        context,
+                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                    )
+                    sharedPreferences.edit().clear().apply()
+                    // Navigate to login
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
     }

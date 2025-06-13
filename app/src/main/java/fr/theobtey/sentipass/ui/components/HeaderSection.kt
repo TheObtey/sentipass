@@ -14,7 +14,9 @@ import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.ui.theme.HeaderTextStyle
 
 @Composable
-fun HeaderSection() {
+fun HeaderSection(
+    onProfileClick: () -> Unit = {}
+) {
     Spacer(modifier = Modifier.height(42.dp))
 
     Row(
@@ -37,7 +39,7 @@ fun HeaderSection() {
             )
         }
 
-        IconButton(onClick = { /* TODO : Profil utilisateur */ }) {
+        IconButton(onClick = onProfileClick) {
             Image(
                 painter = painterResource(R.drawable.ic_user),
                 contentDescription = "Profile",

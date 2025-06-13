@@ -20,9 +20,13 @@ import fr.theobtey.sentipass.ui.theme.White
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchSection(
-    onFilterClick: () -> Unit
+    onFilterClick: () -> Unit,
+    onSearch: (String) -> Unit
 ) {
     var query by remember { mutableStateOf("") }
+    LaunchedEffect(query) {
+        onSearch(query)
+    }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
