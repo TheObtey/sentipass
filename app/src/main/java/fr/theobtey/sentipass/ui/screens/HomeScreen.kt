@@ -33,7 +33,7 @@ fun HomeScreen(
     val passwordViewModel = remember { PasswordViewModel(repository) }
     var showAddPasswordDialog by remember { mutableStateOf(false) }
     var selectedPassword by remember { mutableStateOf<PasswordResponse?>(null) }
-    var showCategories by remember { mutableStateOf(false) }
+    var showCategories by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         passwordViewModel.fetchPasswords(token)
