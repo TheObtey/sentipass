@@ -3,6 +3,7 @@ package fr.theobtey.sentipass.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import fr.theobtey.sentipass.R
+import kotlin.random.Random
 
 @Composable
 fun getPasswordStrength(password: String): Pair<String, Int> {
@@ -23,4 +24,27 @@ fun getPasswordStrength(password: String): Pair<String, Int> {
         in 3..4 -> "Medium password" to R.color.flashy_yellow
         else -> "Strong password" to R.color.flashy_green
     }
+}
+
+fun generatePassword(
+    length: Int,
+    useUppercase: Boolean,
+    useDigits: Boolean,
+    useSymbols: Boolean
+): String {
+    val lowercase = "abcdefghijklmnopqrstuvwxyz"
+    val uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    val digits = "0123456789"
+    val symbols = "!@#\$%&*?+-_"
+
+    var charPool = lowercase
+    if (useUppercase) charPool += uppercase
+    if (useDigits) charPool += digits
+    if (useSymbols) charPool += symbols
+
+    if (charPool.isEmpty()) return ""
+
+    return (1..length)
+        .map { charPool[Random.nextInt(charPool.length)] }
+        .joinToString("")
 }
