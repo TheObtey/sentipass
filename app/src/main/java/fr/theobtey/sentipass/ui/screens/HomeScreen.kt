@@ -19,19 +19,16 @@ import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.data.model.PasswordResponse
 import fr.theobtey.sentipass.data.network.RetrofitClient
 import fr.theobtey.sentipass.repository.PasswordRepository
-import fr.theobtey.sentipass.ui.components.AddPasswordDialog
-import fr.theobtey.sentipass.ui.components.BottomBar
-import fr.theobtey.sentipass.ui.components.CategoriesSection
-import fr.theobtey.sentipass.ui.components.HeaderSection
-import fr.theobtey.sentipass.ui.components.PasswordDetailsDialog
-import fr.theobtey.sentipass.ui.components.PasswordListSection
-import fr.theobtey.sentipass.ui.components.SearchSection
-import fr.theobtey.sentipass.ui.theme.Complementary
-import fr.theobtey.sentipass.ui.theme.Primary
+import fr.theobtey.sentipass.ui.components.*
+import fr.theobtey.sentipass.ui.theme.*
 import fr.theobtey.sentipass.viewmodel.PasswordViewModel
+import androidx.navigation.NavController
 
 @Composable
-fun HomeScreen(token: String) {
+fun HomeScreen(
+    token: String,
+    navController: NavController
+) {
     val repository = remember { PasswordRepository(RetrofitClient.api) }
     val passwordViewModel = remember { PasswordViewModel(repository) }
     var showAddPasswordDialog by remember { mutableStateOf(false) }
@@ -85,13 +82,18 @@ fun HomeScreen(token: String) {
             )
         }
 
-        BottomBar(modifier = Modifier.align(Alignment.BottomCenter))
+        BottomBar(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            navController = navController,
+            currentRoute = "home/$token"
+        )
 
         if (showAddPasswordDialog) {
             AddPasswordDialog(
                 onDismiss = { showAddPasswordDialog = false },
                 viewModel = passwordViewModel,
-                token = token)
+                token = token
+            )
         }
         if (selectedPassword != null) {
             PasswordDetailsDialog(
@@ -101,6 +103,5 @@ fun HomeScreen(token: String) {
                 onEdit = { password -> println("Éditer le mot de passe : ${password.service}") }
             )
         }
-
     }
 }
