@@ -2,6 +2,7 @@ package fr.theobtey.sentipass.ui.navigation
 
 import LoginScreen
 import fr.theobtey.sentipass.ui.screens.RegisterScreen
+import fr.theobtey.sentipass.ui.screens.ToolsScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -39,7 +40,16 @@ fun AppNavHost(
         ) { backStackEntry ->
             val encoded = backStackEntry.arguments?.getString("token") ?: ""
             val token = URLDecoder.decode(encoded, "UTF-8")
-            HomeScreen(token = token)
+            HomeScreen(token = token, navController = navController)
+        }
+
+        composable(
+            "tools/{token}",
+            arguments = listOf(navArgument("token") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val encoded = backStackEntry.arguments?.getString("token") ?: ""
+            val token = URLDecoder.decode(encoded, "UTF-8")
+            ToolsScreen(token = token, navController = navController)
         }
     }
 }
