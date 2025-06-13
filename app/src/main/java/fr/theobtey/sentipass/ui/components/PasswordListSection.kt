@@ -17,8 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 
@@ -30,7 +28,8 @@ data class PasswordItem(
 @Composable
 fun PasswordListSection(
     passwords: List<PasswordResponse>,
-    onPasswordClick: (PasswordResponse) -> Unit
+    onPasswordClick: (PasswordResponse) -> Unit,
+    isCategoryVisible: Boolean
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -41,9 +40,10 @@ fun PasswordListSection(
             modifier = Modifier.padding(bottom = 16.dp)
         )
         Box(
-            modifier = Modifier
-                .height(420.dp)
-                .padding(start = 16.dp, end = 16.dp)
+            modifier = if (isCategoryVisible)
+                Modifier.fillMaxHeight(0.8f).padding(start = 16.dp, end = 16.dp)
+            else
+                Modifier.fillMaxHeight(0.85f).padding(start = 16.dp, end = 16.dp)
         ) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -84,18 +84,6 @@ fun PasswordListSection(
                     Spacer(modifier = Modifier.height(18.dp))
                 }
             }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .align(Alignment.BottomCenter)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, Primary)
-                        )
-                    )
-            )
         }
     }
 }

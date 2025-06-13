@@ -33,6 +33,7 @@ fun HomeScreen(
     val passwordViewModel = remember { PasswordViewModel(repository) }
     var showAddPasswordDialog by remember { mutableStateOf(false) }
     var selectedPassword by remember { mutableStateOf<PasswordResponse?>(null) }
+    var showCategories by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         passwordViewModel.fetchPasswords(token)
@@ -53,17 +54,19 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            SearchSection()
+            SearchSection(onFilterClick = { showCategories = !showCategories })
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            CategoriesSection()
-
-            Spacer(modifier = Modifier.height(32.dp))
+            if (showCategories) {
+                CategoriesSection()
+                Spacer(modifier = Modifier.height(32.dp))
+            }
 
             PasswordListSection(
                 passwords = passwords,
-                onPasswordClick = { selectedPassword = it }
+                onPasswordClick = { selectedPassword = it },
+                isCategoryVisible = showCategories
             )
         }
 

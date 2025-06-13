@@ -19,7 +19,9 @@ import fr.theobtey.sentipass.ui.theme.White
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchSection() {
+fun SearchSection(
+    onFilterClick: () -> Unit
+) {
     var query by remember { mutableStateOf("") }
 
     Row(
@@ -64,7 +66,7 @@ fun SearchSection() {
         Spacer(modifier = Modifier.width(18.dp))
 
         IconButton(
-            onClick = { /* TODO : Ouvrir les filtres */},
+            onClick = onFilterClick,
             modifier = Modifier
                 .size(32.dp)
                 .background(Color(0xFF2B2F36), RoundedCornerShape(16.dp))
