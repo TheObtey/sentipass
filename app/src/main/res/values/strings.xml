@@ -61,11 +61,21 @@
         <item>Export Passwords</item>
     </string-array>
 
+    <string name="password_generator_title">PASSWORD GENERATOR</string>
+    <string name="password_generator_password_length">Length</string>
+    <string name="password_generator_use_capital_letters">Use capital letters (A-Z)</string>
+    <string name="password_generator_use_digits">Use digits (0-9)</string>
+    <string name="password_generator_use_symbols">Use symbols (@!$%*)</string>
+    <string name="password_generator_button_generate">GENERATE</string>
+    <string name="password_generator_button_copy">COPY</string>
+
     <string-array name="tool_page_password_strength">
         <item>Weak Password</item>
         <item>Moderate Password</item>
         <item>Strong Password</item>
     </string-array>
+
+
 
 
 
