@@ -15,25 +15,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.ui.theme.*
+import fr.theobtey.sentipass.utils.*
 
 @Composable
-fun PasswordGeneratorDialog( /* TODO: Improve the UI */
+fun PasswordGeneratorDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
 
-    var password by remember { mutableStateOf("dVX49wB#eq7Vct'SjkCfDKY%GXwrBzjeMJEjCF3xKQ@u2B%Cg%8y2Xk4y'XmQStH") }
-    var passwordStrength by remember { mutableStateOf("Strong Password") }
     var passwordLength by remember { mutableStateOf(16f) }
     var useUppercase by remember { mutableStateOf(true) }
     var useDigits by remember { mutableStateOf(true) }
     var useSymbols by remember { mutableStateOf(true) }
+
+    var password by remember { mutableStateOf("") }
+
+    // Function to update password
+    fun updatePassword() {
+        password = generatePassword(
+            length = passwordLength.toInt(),
+            useUppercase = useUppercase,
+            useDigits = useDigits,
+            useSymbols = useSymbols
+        )
+    }
+
+    // Generate a password on dialog open and when parameters change
+    LaunchedEffect(passwordLength, useUppercase, useDigits, useSymbols) {
+        updatePassword()
+    }
+
+    val (passwordStrengthLabel, passwordStrengthColorRes) = getPasswordStrength(password)
 
     Box(
         modifier = Modifier
@@ -81,19 +100,15 @@ fun PasswordGeneratorDialog( /* TODO: Improve the UI */
             Spacer(modifier = Modifier.height(8.dp))
             // Strength indicator
             Text(
-                text = passwordStrength,
-                color = when (passwordStrength) {
-                    "Weak Password" -> Color.Red
-                    "Moderate Password" -> Color.Yellow
-                    else -> Color.Green
-                },
+                text = passwordStrengthLabel,
+                color = Color(androidx.core.content.ContextCompat.getColor(context, passwordStrengthColorRes)),
                 style = DefaultTextStyle
             )
             Spacer(modifier = Modifier.height(16.dp))
 
             // Generate and Copy buttons
             Button(
-                onClick = { /* TODO: Generate password logic */ },
+                onClick = { updatePassword() },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(containerColor = Complementary)
             ) {
