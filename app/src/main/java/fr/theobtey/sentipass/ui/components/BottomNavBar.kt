@@ -21,11 +21,14 @@ import fr.theobtey.sentipass.ui.theme.DefaultTextStyle
 import fr.theobtey.sentipass.ui.theme.Gray
 import fr.theobtey.sentipass.ui.theme.Secondary
 import fr.theobtey.sentipass.ui.theme.White
+import androidx.navigation.NavController
 
 @Composable
-fun BottomBar(modifier: Modifier = Modifier) {
-    var selected by remember { mutableStateOf("home") }
-
+fun BottomBar(
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    currentRoute: String
+) {
     Row(
         modifier = modifier
             .padding(horizontal = 24.dp, vertical = 24.dp)
@@ -41,26 +44,34 @@ fun BottomBar(modifier: Modifier = Modifier) {
         BottomBarItem(
             icon = R.drawable.ic_home,
             label = "Home",
-            selected = selected == "home",
-            onClick = { selected = "home" }
+            selected = currentRoute.startsWith("home"),
+            onClick = { 
+                if (!currentRoute.startsWith("home")) {
+                    navController.navigate("home/${currentRoute.split("/").lastOrNull() ?: ""}")
+                }
+            }
         )
         BottomBarItem(
             icon = R.drawable.ic_password,
             label = "Passwords",
-            selected = selected == "passwords",
-            onClick = { selected = "passwords" }
+            selected = currentRoute.startsWith("passwords"),
+            onClick = { /* TODO: Implement passwords navigation */ }
         )
         BottomBarItem(
             icon = R.drawable.ic_tools,
             label = "Tools",
-            selected = selected == "tools",
-            onClick = { selected = "tools" }
+            selected = currentRoute.startsWith("tools"),
+            onClick = { 
+                if (!currentRoute.startsWith("tools")) {
+                    navController.navigate("tools/${currentRoute.split("/").lastOrNull() ?: ""}")
+                }
+            }
         )
         BottomBarItem(
             icon = R.drawable.ic_settings,
             label = "Settings",
-            selected = selected == "settings",
-            onClick = { selected = "settings" }
+            selected = currentRoute.startsWith("settings"),
+            onClick = { /* TODO: Implement settings navigation */ }
         )
     }
 }
