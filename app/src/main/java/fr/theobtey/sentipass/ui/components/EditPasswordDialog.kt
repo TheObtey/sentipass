@@ -1,6 +1,7 @@
 package fr.theobtey.sentipass.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -42,6 +43,7 @@ fun EditPasswordDialog(
         modifier = Modifier
             .fillMaxSize()
             .background(Smoke)
+            .clickable(enabled = true, onClick = {})
     ) {
         Column(
             modifier = Modifier

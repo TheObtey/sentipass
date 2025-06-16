@@ -43,6 +43,7 @@ fun PasswordDetailsDialog(
         modifier = Modifier
             .fillMaxSize()
             .background(Smoke)
+            .clickable(enabled = true, onClick = {}) // This will consume all clicks on the background
     ) {
         Card(
             shape = RoundedCornerShape(16.dp),
