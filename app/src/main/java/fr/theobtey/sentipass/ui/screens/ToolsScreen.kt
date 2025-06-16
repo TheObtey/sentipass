@@ -13,9 +13,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fr.theobtey.sentipass.R
-import fr.theobtey.sentipass.ui.components.BottomBar
-import fr.theobtey.sentipass.ui.components.HeaderSection
-import fr.theobtey.sentipass.ui.components.PasswordGeneratorDialog
+import fr.theobtey.sentipass.ui.components.*
 import fr.theobtey.sentipass.ui.theme.*
 import androidx.navigation.NavController
 
@@ -27,6 +25,7 @@ fun ToolsScreen(
     val context = LocalContext.current
     val toolOptions = context.resources.getStringArray(R.array.tool_page_options)
     var showPasswordGeneratorDialog by remember { mutableStateOf(false) }
+    var showPasswordHealthDialog by remember { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -55,7 +54,7 @@ fun ToolsScreen(
                 ToolCard(
                     title = toolOptions[1],
                     icon = R.drawable.check_password,
-                    onClick = { /* TODO: Implement Password Health */ }
+                    onClick = { showPasswordHealthDialog = true }
                 )
                 
                 ToolCard(
@@ -68,6 +67,10 @@ fun ToolsScreen(
 
         if (showPasswordGeneratorDialog) {
             PasswordGeneratorDialog(onDismiss = { showPasswordGeneratorDialog = false })
+        }
+
+        if (showPasswordHealthDialog) {
+            PasswordHealthDialog(onDismiss = { showPasswordHealthDialog = false })
         }
 
         BottomBar(
@@ -89,9 +92,7 @@ fun ToolCard(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Secondary
-        )
+        colors = CardDefaults.cardColors(containerColor = Primary)
     ) {
         Row(
             modifier = Modifier
@@ -105,9 +106,7 @@ fun ToolCard(
                 tint = Complementary,
                 modifier = Modifier.size(32.dp)
             )
-            
             Spacer(modifier = Modifier.width(16.dp))
-            
             Text(
                 text = title,
                 style = DefaultTextStyle,

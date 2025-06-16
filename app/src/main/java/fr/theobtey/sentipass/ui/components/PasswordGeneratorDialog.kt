@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -58,6 +59,7 @@ fun PasswordGeneratorDialog(
         modifier = Modifier
             .fillMaxSize()
             .background(Smoke)
+            .clickable(enabled = true, onClick = {})
     ) {
         Column(
             modifier = Modifier
