@@ -51,9 +51,24 @@ class PasswordViewModel(private val repository: PasswordRepository) : ViewModel(
         }
     }
 
+    fun updatePassword(id: Int, request: PasswordRequest, token: String) {
+        _state.value = AddPasswordState.Loading
+
+        viewModelScope.launch {
+            try {
+                val response = repository.updatePassword(id, request, token)
+                _state.value = if (response.isSuccessful) {
+                    AddPasswordState.Success
+                } else {
+                    AddPasswordState.Error("Error: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                _state.value = AddPasswordState.Error("Exception: ${e.message}")
+            }
+        }
+    }
+
     fun resetState() {
         _state.value = AddPasswordState.Idle
     }
-
-
 }

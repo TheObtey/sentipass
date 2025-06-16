@@ -10,6 +10,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 interface ApiService {
     @POST("login")
@@ -28,4 +30,11 @@ interface ApiService {
     suspend fun getPasswords(
         @Header("Authorization") token: String
     ): List<PasswordResponse>
+
+    @PUT("passwords/update-password/{id}")
+    suspend fun updatePassword(
+        @Path("id") id: Int,
+        @Body passwordRequest: PasswordRequest,
+        @Header("Authorization") token: String
+    ): Response<Unit>
 }

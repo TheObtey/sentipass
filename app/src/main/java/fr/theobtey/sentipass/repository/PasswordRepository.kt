@@ -13,4 +13,8 @@ class PasswordRepository(private val apiService: ApiService) {
     suspend fun getPasswords(token: String): List<PasswordResponse> {
         return apiService.getPasswords("Bearer $token")
     }
+
+    suspend fun updatePassword(id: Int, passwordRequest: PasswordRequest, token: String): Response<Unit> {
+        return apiService.updatePassword(id, passwordRequest, "Bearer $token")
+    }
 }

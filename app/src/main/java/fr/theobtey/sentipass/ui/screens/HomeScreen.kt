@@ -117,7 +117,9 @@ fun HomeScreen(
                 password = selectedPassword!!,
                 onClose = { selectedPassword = null },
                 onCopy = { value -> println("Copié : $value") },
-                onEdit = { password -> println("Éditer le mot de passe : ${password.service}") }
+                onEdit = { password -> println("Éditer le mot de passe : ${password.service}") },
+                viewModel = passwordViewModel,
+                token = token
             )
         }
         if (showDisconnectDialog) {

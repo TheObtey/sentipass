@@ -19,16 +19,25 @@ import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.data.model.PasswordResponse
 import fr.theobtey.sentipass.ui.theme.*
 import fr.theobtey.sentipass.utils.getPasswordStrength
+import fr.theobtey.sentipass.viewmodel.PasswordViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PasswordDetailsDialog(
     password: PasswordResponse,
     onClose: () -> Unit,
+    onCopy: (String) -> Unit,
     onEdit: (PasswordResponse) -> Unit,
-    onCopy: (String) -> Unit
+    viewModel: PasswordViewModel,
+    token: String
 ) {
     var reveal by remember { mutableStateOf(false) }
+    var showEditDialog by remember { mutableStateOf(false) }
+    
+    // Observe the passwords list to get the updated password
+    val passwords by viewModel.passwords.collectAsState()
+    val updatedPassword = passwords.find { it.id == password.id } ?: password
 
     Box(
         modifier = Modifier
@@ -60,8 +69,8 @@ fun PasswordDetailsDialog(
                     Spacer(Modifier.width(8.dp))
 
                     AsyncImage(
-                        model = "https://www.google.com/s2/favicons?sz=64&domain_url=${password.url}",
-                        contentDescription = password.service,
+                        model = "https://www.google.com/s2/favicons?sz=64&domain_url=${updatedPassword.url}",
+                        contentDescription = updatedPassword.service,
                         modifier = Modifier.size(32.dp),
                         error = painterResource(R.drawable.ic_password),
                         fallback = painterResource(R.drawable.ic_password)
@@ -70,7 +79,7 @@ fun PasswordDetailsDialog(
                     Spacer(Modifier.width(12.dp))
 
                     Text(
-                        text = password.service,
+                        text = updatedPassword.service,
                         style = PasswordDetailsTitleStyle,
                         modifier = Modifier.weight(1f)
                     )
@@ -80,7 +89,7 @@ fun PasswordDetailsDialog(
                         style = DefaultTextStyle,
                         color = Gray,
                         modifier = Modifier
-                            .clickable { onEdit(password) }
+                            .clickable { showEditDialog = true }
                             .padding(4.dp)
                     )
                 }
@@ -92,8 +101,8 @@ fun PasswordDetailsDialog(
                 // Email / Username
                 DetailRow(
                     label = "Email / Username",
-                    value = password.email ?: password.username.orEmpty(),
-                    onCopy = { onCopy(password.email ?: password.username.orEmpty()) },
+                    value = updatedPassword.email ?: updatedPassword.username.orEmpty(),
+                    onCopy = { onCopy(updatedPassword.email ?: updatedPassword.username.orEmpty()) },
                 )
 
                 Spacer(Modifier.height(12.dp))
@@ -101,8 +110,8 @@ fun PasswordDetailsDialog(
                 // Password
                 DetailRow(
                     label = "Password",
-                    value = if (reveal) password.password else "••••••••••••",
-                    onCopy = { onCopy(password.password) },
+                    value = if (reveal) updatedPassword.password else "••••••••••••",
+                    onCopy = { onCopy(updatedPassword.password) },
                     trailingIcon = {
                         IconButton(onClick = { reveal = !reveal }) {
                             Icon(
@@ -116,7 +125,7 @@ fun PasswordDetailsDialog(
                 Spacer(Modifier.height(12.dp))
 
                 // Password Health
-                val (healthText, healthColorRes) = getPasswordStrength(password.password)
+                val (healthText, healthColorRes) = getPasswordStrength(updatedPassword.password)
                 DetailRow(
                     label = "Password Health",
                     value = healthText,
@@ -128,8 +137,8 @@ fun PasswordDetailsDialog(
                 // Website Address
                 DetailRow(
                     label = "Website Address",
-                    value = password.url.orEmpty(),
-                    onCopy = { onCopy(password.url.orEmpty()) },
+                    value = updatedPassword.url.orEmpty(),
+                    onCopy = { onCopy(updatedPassword.url.orEmpty()) },
                     trailingIcon = {
                         IconButton(onClick = {
                             /* TODO: open website */
@@ -140,6 +149,15 @@ fun PasswordDetailsDialog(
                 )
             }
         }
+    }
+
+    if (showEditDialog) {
+        EditPasswordDialog(
+            onDismiss = { showEditDialog = false },
+            viewModel = viewModel,
+            token = token,
+            password = updatedPassword
+        )
     }
 }
 
