@@ -8,6 +8,8 @@
     <string name="button_existing_account">already have an account</string>
     <string name="button_edit_password">edit</string>
     <string name="button_disconnect">DISCONNECT</string>
+    <string name="button_analyze">ANALYZE</string>
+    <string name="button_export">EXPORT</string>
 
     <!-- Entries -->
     <string name="entry_service">service</string>
