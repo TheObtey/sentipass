@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.data.model.PasswordResponse
 import fr.theobtey.sentipass.ui.theme.*
-import fr.theobtey.sentipass.utils.getPasswordStrengthNonComposable
+import fr.theobtey.sentipass.utils.analyzePasswords
 import fr.theobtey.sentipass.viewmodel.PasswordViewModel
 
 // Data class for password analysis results
@@ -200,32 +200,4 @@ private fun FixButton() {
             color = White
         )
     }
-}
-
-// Password analysis function
-private fun analyzePasswords(passwords: List<PasswordResponse>): List<PasswordHealthResult> {
-    val results = mutableListOf<PasswordHealthResult>()
-    val passwordCounts = passwords.groupingBy { it.password }.eachCount()
-
-    passwords.forEach { password ->
-        val isReused = (passwordCounts[password.password] ?: 0) > 1
-        val (strength, _) = getPasswordStrengthNonComposable(password.password)
-        
-        if (strength != "Strong") {
-            results.add(
-                PasswordHealthResult(
-                    password = password,
-                    strength = strength,
-                    colorRes = when (strength) {
-                        "Weak" -> R.color.flashy_red
-                        "Medium" -> R.color.flashy_yellow
-                        else -> R.color.flashy_green
-                    },
-                    isReused = isReused
-                )
-            )
-        }
-    }
-
-    return results
 } 

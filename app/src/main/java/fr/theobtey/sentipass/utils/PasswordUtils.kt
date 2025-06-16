@@ -3,6 +3,8 @@ package fr.theobtey.sentipass.utils
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import fr.theobtey.sentipass.R
+import fr.theobtey.sentipass.data.model.PasswordResponse
+import fr.theobtey.sentipass.ui.components.PasswordHealthResult
 import kotlin.random.Random
 
 @Composable
@@ -68,4 +70,31 @@ fun generatePassword(
     return (1..length)
         .map { charPool[Random.nextInt(charPool.length)] }
         .joinToString("")
+}
+
+fun analyzePasswords(passwords: List<PasswordResponse>): List<PasswordHealthResult> {
+    val results = mutableListOf<PasswordHealthResult>()
+    val passwordCounts = passwords.groupingBy { it.password }.eachCount()
+
+    passwords.forEach { password ->
+        val isReused = (passwordCounts[password.password] ?: 0) > 1
+        val (strength, _) = getPasswordStrengthNonComposable(password.password)
+        
+        if (strength != "Strong") {
+            results.add(
+                PasswordHealthResult(
+                    password = password,
+                    strength = strength,
+                    colorRes = when (strength) {
+                        "Weak" -> R.color.flashy_red
+                        "Medium" -> R.color.flashy_yellow
+                        else -> R.color.flashy_green
+                    },
+                    isReused = isReused
+                )
+            )
+        }
+    }
+
+    return results
 }
