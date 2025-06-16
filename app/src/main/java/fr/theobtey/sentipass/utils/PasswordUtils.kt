@@ -26,6 +26,27 @@ fun getPasswordStrength(password: String): Pair<String, Int> {
     }
 }
 
+/* TODO: Find a way to merge getPasswordStrength and getPasswordStrengthNonComposable */
+fun getPasswordStrengthNonComposable(password: String): Pair<String, Int> {
+    val length = password.length
+    val hasUpper = password.any { it.isUpperCase() }
+    val hasLower = password.any { it.isLowerCase() }
+    val hasDigit = password.any { it.isDigit() }
+    val hasSpecial = password.any { !it.isLetterOrDigit() }
+
+    val score = listOf(hasUpper, hasLower, hasDigit, hasSpecial).count { it } + when {
+        length >= 14 -> 2
+        length >= 10 -> 1
+        else -> 0
+    }
+
+    return when (score) {
+        in 0..2 -> "Weak" to R.color.flashy_red
+        in 3..4 -> "Medium" to R.color.flashy_yellow
+        else -> "Strong" to R.color.flashy_green
+    }
+}
+
 fun generatePassword(
     length: Int,
     useUppercase: Boolean,

@@ -16,6 +16,9 @@ import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.ui.components.*
 import fr.theobtey.sentipass.ui.theme.*
 import androidx.navigation.NavController
+import fr.theobtey.sentipass.data.network.RetrofitClient
+import fr.theobtey.sentipass.repository.PasswordRepository
+import fr.theobtey.sentipass.viewmodel.PasswordViewModel
 
 @Composable
 fun ToolsScreen(
@@ -26,6 +29,14 @@ fun ToolsScreen(
     val toolOptions = context.resources.getStringArray(R.array.tool_page_options)
     var showPasswordGeneratorDialog by remember { mutableStateOf(false) }
     var showPasswordHealthDialog by remember { mutableStateOf(false) }
+    
+    val repository = remember { PasswordRepository(RetrofitClient.api) }
+    val passwordViewModel = remember { PasswordViewModel(repository) }
+
+    // Fetch passwords when the screen is loaded
+    LaunchedEffect(Unit) {
+        passwordViewModel.fetchPasswords(token)
+    }
 
     Box(
         modifier = Modifier
@@ -70,7 +81,10 @@ fun ToolsScreen(
         }
 
         if (showPasswordHealthDialog) {
-            PasswordHealthDialog(onDismiss = { showPasswordHealthDialog = false })
+            PasswordHealthDialog(
+                onDismiss = { showPasswordHealthDialog = false },
+                viewModel = passwordViewModel
+            )
         }
 
         BottomBar(
