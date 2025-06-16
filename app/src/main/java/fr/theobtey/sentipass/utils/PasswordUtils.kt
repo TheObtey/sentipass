@@ -20,9 +20,9 @@ fun getPasswordStrength(password: String): Pair<String, Int> {
     }
 
     return when (score) {
-        in 0..2 -> "Weak password" to R.color.flashy_red
-        in 3..4 -> "Medium password" to R.color.flashy_yellow
-        else -> "Strong password" to R.color.flashy_green
+        in 0..2 -> "Weak" to R.color.flashy_red
+        in 3..4 -> "Medium" to R.color.flashy_yellow
+        else -> "Strong" to R.color.flashy_green
     }
 }
 

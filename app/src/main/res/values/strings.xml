@@ -52,7 +52,7 @@
     <string name="password_popup_password_subtitle">**********</string>
 
     <string name="password_popup_password_strength_title">Password Health</string>
-    <string name="password_popup_password_strength_subtitle">Weak Password</string>
+    <string name="password_popup_password_strength_subtitle">Weak</string>
 
     <string name="password_popup_website_title">Website</string>
     <string name="password_popup_website_subtitle">https://example.com</string>
@@ -73,9 +73,9 @@
     <string name="password_generator_button_copy">COPY</string>
 
     <string-array name="tool_page_password_strength">
-        <item>Weak Password</item>
-        <item>Moderate Password</item>
-        <item>Strong Password</item>
+        <item>Weak</item>
+        <item>Moderate</item>
+        <item>Strong</item>
     </string-array>
 
 
@@ -138,7 +138,7 @@
     <string-array name="password_popup_sections_subtitles">
         <item>example@gmail.com</item> <!-- [0] -->
         <item>**********</item> <!-- [1] -->
-        <item>Weak Password</item> <!-- [2] -->
+        <item>Weak</item> <!-- [2] -->
         <item>https://example.com</item> <!-- [3] -->
     </string-array>
 
@@ -150,9 +150,9 @@
     </string-array>
 
     <string-array name="password_strength_levels">
-        <item>Weak Password</item>
-        <item>Moderate Password</item>
-        <item>Strong Password</item>
+        <item>Weak</item>
+        <item>Moderate</item>
+        <item>Strong</item>
     </string-array>
 
 
