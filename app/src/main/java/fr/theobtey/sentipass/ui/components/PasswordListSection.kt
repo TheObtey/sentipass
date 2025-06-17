@@ -10,15 +10,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 
 data class PasswordItem(
     val name: String,
@@ -31,6 +33,9 @@ fun PasswordListSection(
     onPasswordClick: (PasswordResponse) -> Unit,
     isCategoryVisible: Boolean
 ) {
+    var showPopup by remember { mutableStateOf(false) }
+    var selectedPassword by remember { mutableStateOf<PasswordResponse?>(null) }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = stringResource(R.string.home_page_most_recent),
@@ -52,12 +57,25 @@ fun PasswordListSection(
                     .padding(end = 8.dp)
             ) {
                 items(passwords) { item ->
+                    val interactionSource = remember { MutableInteractionSource() }
+                    val isPressed by interactionSource.collectIsPressedAsState()
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .height(48.dp)
                             .fillMaxWidth()
-                            .clickable { onPasswordClick(item) }
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null
+                            ) {
+                                if (isPressed) {
+                                    selectedPassword = item
+                                    showPopup = true
+                                } else {
+                                    onPasswordClick(item)
+                                }
+                            }
                     ) {
                         AsyncImage(
                             model = "https://www.google.com/s2/favicons?sz=64&domain_url=${item.url}",
@@ -85,5 +103,33 @@ fun PasswordListSection(
                 }
             }
         }
+    }
+
+    if (showPopup && selectedPassword != null) {
+        AlertDialog(
+            onDismissRequest = { 
+                showPopup = false
+                selectedPassword = null
+            },
+            title = { 
+                Text(
+                    text = selectedPassword!!.service,
+                    style = MaterialTheme.typography.titleLarge,
+                    color = White
+                )
+            },
+            text = { },
+            confirmButton = {
+                TextButton(
+                    onClick = { 
+                        showPopup = false
+                        selectedPassword = null
+                    }
+                ) {
+                    Text("Go Back")
+                }
+            },
+            containerColor = Primary
+        )
     }
 }
