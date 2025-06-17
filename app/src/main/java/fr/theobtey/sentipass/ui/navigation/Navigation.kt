@@ -30,8 +30,13 @@ fun AppNavHost(
 
         composable("register") {
             RegisterScreen(
-                onRegisterClick = { username, password -> onRegister(username, password) },
-                onGoToLogin = { navController.popBackStack() }
+                onRegisterClick = { email, password ->
+                    // Handle register click
+                },
+                onGoToLogin = {
+                    navController.navigate("login")
+                },
+                navController = navController
             )
         }
 
