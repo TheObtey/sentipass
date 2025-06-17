@@ -152,16 +152,20 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
+    <string name="settings_nuke">Nuke</string>
+    <string name="settings_nuke_description">Delete your account and all data permanently</string>
+    <string name="settings_nuke_confirmation_title">Nuke Account</string>
+    <string name="settings_nuke_confirmation_message">This will permanently delete your account and all your data. This action cannot be undone.</string>
     <string name="settings_disconnect">Disconnect</string>
     <string name="settings_disconnect_description">Disconnect your account and remove all data</string>
     <string name="settings_disconnect_confirmation_title">Disconnect Account</string>
-    <string name="settings_disconnect_confirmation_confirm">Disconnect</string>
-    <string name="settings_disconnect_confirmation_cancel">Cancel</string>
     <string name="settings_delete_all_passwords">Delete All Passwords</string>
-    <string name="settings_delete_all_passwords_description">Permanently delete all your saved passwords</string>
+    <string name="settings_delete_all_passwords_description">Delete all your saved passwords permanently</string>
     <string name="settings_delete_all_passwords_confirmation_title">Delete All Passwords</string>
-    <string name="settings_delete_all_passwords_confirmation_message">This action cannot be undone. All your saved passwords will be permanently deleted.</string>
-    <string name="settings_delete_all_passwords_confirmation_confirm">Delete All Passwords</string>
-    <string name="settings_delete_all_passwords_confirmation_cancel">Cancel</string>
+    <string name="settings_delete_all_passwords_confirmation_message">All your saved passwords will be permanently deleted. This action cannot be undone.</string>
+
+    <!-- Common Dialog -->
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_confirm">Confirm</string>
 
 </resources>

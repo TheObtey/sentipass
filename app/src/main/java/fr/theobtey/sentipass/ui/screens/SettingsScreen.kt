@@ -27,9 +27,10 @@ import androidx.security.crypto.MasterKeys
 fun SettingsScreen(
     token: String,
     navController: NavController
-) {
+) { /* TODO: Implement the buttons functionality */
     var showDisconnectDialog by remember { mutableStateOf(false) }
     var showDeleteAllPasswordsDialog by remember { mutableStateOf(false) }
+    var showNukeDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Box(
@@ -73,6 +74,14 @@ fun SettingsScreen(
                         isDestructive = true
                     )
                 }
+                item {
+                    SettingsButton(
+                        title = stringResource(R.string.settings_nuke),
+                        description = stringResource(R.string.settings_nuke_description),
+                        onClick = { showNukeDialog = true },
+                        isDestructive = true
+                    )
+                }
             }
         }
 
@@ -111,6 +120,21 @@ fun SettingsScreen(
                     // TODO: Implement delete all passwords functionality
                     println("Delete all passwords confirmed")
                     showDeleteAllPasswordsDialog = false
+                }
+            )
+        }
+
+        if (showNukeDialog) {
+            NukeDialog(
+                onDismiss = { showNukeDialog = false },
+                onConfirm = {
+                    // TODO: Implement nuke functionality
+                    // 1. Delete all passwords
+                    // 2. Delete account from database
+                    // 3. Clear local data
+                    // 4. Navigate to login
+                    println("Nuke confirmed")
+                    showNukeDialog = false
                 }
             )
         }
@@ -158,14 +182,14 @@ fun DeleteAllPasswordsDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = stringResource(R.string.settings_delete_all_passwords_confirmation_confirm),
+                        text = stringResource(R.string.dialog_confirm),
                         color = White
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 TextButton(onClick = onDismiss) {
                     Text(
-                        text = stringResource(R.string.settings_delete_all_passwords_confirmation_cancel),
+                        text = stringResource(R.string.dialog_cancel),
                         color = Complementary
                     )
                 }
@@ -246,14 +270,71 @@ fun DisconnectDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = stringResource(R.string.settings_disconnect_confirmation_confirm),
+                        text = stringResource(R.string.dialog_confirm),
                         color = White
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 TextButton(onClick = onDismiss) {
                     Text(
-                        text = stringResource(R.string.settings_disconnect_confirmation_cancel),
+                        text = stringResource(R.string.dialog_cancel),
+                        color = Complementary
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun NukeDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0x99000000))
+            .clickable(enabled = false) { }
+    ) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(24.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Primary)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_nuke_confirmation_title),
+                    style = DefaultTextStyle,
+                    color = White,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                Text(
+                    text = stringResource(R.string.settings_nuke_confirmation_message),
+                    style = DefaultTextStyle,
+                    color = Gray,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+                Button(
+                    onClick = onConfirm,
+                    colors = ButtonDefaults.buttonColors(containerColor = Red),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.dialog_confirm),
+                        color = White
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                TextButton(onClick = onDismiss) {
+                    Text(
+                        text = stringResource(R.string.dialog_cancel),
                         color = Complementary
                     )
                 }
