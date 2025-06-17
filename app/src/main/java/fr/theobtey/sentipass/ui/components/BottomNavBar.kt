@@ -65,7 +65,11 @@ fun BottomBar(
             icon = R.drawable.ic_settings,
             label = "Settings",
             selected = currentRoute.startsWith("settings"),
-            onClick = { /* TODO: Implement settings navigation */ }
+            onClick = { 
+                if (!currentRoute.startsWith("settings")) {
+                    navController.navigate("settings/${currentRoute.split("/").lastOrNull() ?: ""}")
+                }
+            }
         )
     }
 }
