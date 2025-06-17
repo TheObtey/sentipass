@@ -45,17 +45,25 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         onLogin = { username, password ->
                             if (username.isBlank() || password.isBlank()) {
-                                println("You must fill all fields")
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Please fill all fields",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
                             } else {
-                                println("Login tried with : $username / $password")
                                 loginViewModel.login(username, password)
                             }
                         },
                         onRegister = { username, password ->
                             if (username.isBlank() || password.isBlank()) {
-                                println("You must fill all fields")
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar(
+                                        message = "Please fill all fields",
+                                        duration = SnackbarDuration.Short
+                                    )
+                                }
                             } else {
-                                println("Register tried with : $username / $password")
                                 registerViewModel.register(username, password)
                             }
                         }
@@ -67,7 +75,7 @@ class MainActivity : ComponentActivity() {
                             val rawToken = (state as LoginState.Success).token
                             val encodedToken = URLEncoder.encode(rawToken, "UTF-8")
 
-                            println("Login successfull, token : $rawToken")
+                            println("Login successful, token : $rawToken")
 
                             navController.navigate("home/$encodedToken") {
                                 popUpTo("login") { inclusive = true }

@@ -7,6 +7,7 @@ import fr.theobtey.sentipass.data.network.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 sealed class LoginState {
     object Idle : LoginState()
@@ -27,7 +28,16 @@ class LoginViewModel : ViewModel() {
                 val response = RetrofitClient.api.login(LoginRequest(username, password))
                 _loginState.value = LoginState.Success(response.token)
             } catch (e: Exception) {
-                _loginState.value = LoginState.Error("Login failed: ${e.message}")
+                when (e) {
+                    is HttpException -> {
+                        when (e.code()) {
+                            404 -> _loginState.value = LoginState.Error("Username not found")
+                            401 -> _loginState.value = LoginState.Error("Incorrect password")
+                            else -> _loginState.value = LoginState.Error("Login failed: ${e.code()}")
+                        }
+                    }
+                    else -> _loginState.value = LoginState.Error("Login failed: ${e.message}")
+                }
             }
         }
     }
