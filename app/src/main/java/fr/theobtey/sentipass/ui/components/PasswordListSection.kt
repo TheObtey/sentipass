@@ -5,6 +5,7 @@ import fr.theobtey.sentipass.data.model.PasswordResponse
 import fr.theobtey.sentipass.ui.theme.DefaultTextStyle
 import fr.theobtey.sentipass.ui.theme.Primary
 import fr.theobtey.sentipass.ui.theme.White
+import fr.theobtey.sentipass.ui.theme.TitleTextStyle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,7 +25,8 @@ import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import fr.theobtey.sentipass.ui.theme.TitleTextStyle
+import fr.theobtey.sentipass.viewmodel.PasswordViewModel
+import fr.theobtey.sentipass.viewmodel.AddPasswordState
 
 data class PasswordItem(
     val name: String,
@@ -35,10 +37,13 @@ data class PasswordItem(
 fun PasswordListSection(
     passwords: List<PasswordResponse>,
     onPasswordClick: (PasswordResponse) -> Unit,
-    isCategoryVisible: Boolean
+    isCategoryVisible: Boolean,
+    viewModel: PasswordViewModel,
+    token: String
 ) {
     var showPopup by remember { mutableStateOf(false) }
     var selectedPassword by remember { mutableStateOf<PasswordResponse?>(null) }
+    val state by viewModel.state.collectAsState()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
@@ -151,9 +156,9 @@ fun PasswordListSection(
             confirmButton = {
                 Button(
                     onClick = { 
-                        // TODO: Implement delete functionality
-                        showPopup = false
-                        selectedPassword = null
+                        selectedPassword?.let { password ->
+                            viewModel.deletePassword(password.id, token)
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Red
@@ -165,5 +170,14 @@ fun PasswordListSection(
             },
             containerColor = Primary
         )
+    }
+
+    LaunchedEffect(state) {
+        if (state is AddPasswordState.Success) {
+            viewModel.fetchPasswords(token)
+            viewModel.resetState()
+            showPopup = false
+            selectedPassword = null
+        }
     }
 }

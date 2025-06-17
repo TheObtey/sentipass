@@ -68,6 +68,23 @@ class PasswordViewModel(private val repository: PasswordRepository) : ViewModel(
         }
     }
 
+    fun deletePassword(id: Int, token: String) {
+        _state.value = AddPasswordState.Loading
+
+        viewModelScope.launch {
+            try {
+                val response = repository.deletePassword(id, token)
+                _state.value = if (response.isSuccessful) {
+                    AddPasswordState.Success
+                } else {
+                    AddPasswordState.Error("Error: ${response.code()}")
+                }
+            } catch (e: Exception) {
+                _state.value = AddPasswordState.Error("Exception: ${e.message}")
+            }
+        }
+    }
+
     fun resetState() {
         _state.value = AddPasswordState.Idle
     }

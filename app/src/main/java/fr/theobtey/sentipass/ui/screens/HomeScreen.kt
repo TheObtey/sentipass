@@ -28,6 +28,7 @@ import fr.theobtey.sentipass.data.network.RetrofitClient
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     token: String,
@@ -64,11 +65,11 @@ fun HomeScreen(
                 onSearch = { searchQuery = it }
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             if (showCategories) {
                 CategoriesSection()
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
             }
 
             PasswordListSection(
@@ -78,30 +79,25 @@ fun HomeScreen(
                     (password.username?.contains(searchQuery, ignoreCase = true) ?: false)
                 },
                 onPasswordClick = { selectedPassword = it },
-                isCategoryVisible = showCategories
+                isCategoryVisible = showCategories,
+                viewModel = passwordViewModel,
+                token = token
             )
         }
 
         FloatingActionButton(
             onClick = { showAddPasswordDialog = true },
-            shape = CircleShape,
-            containerColor = Primary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 32.dp, bottom = 124.dp)
+                .padding(16.dp),
+            containerColor = Complementary
         ) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_add),
-                contentDescription = "Add password",
-                tint = Complementary
+                painter = painterResource(R.drawable.ic_add),
+                contentDescription = "Add Password",
+                tint = White
             )
         }
-
-        BottomBar(
-            modifier = Modifier.align(Alignment.BottomCenter),
-            navController = navController,
-            currentRoute = "home/$token"
-        )
 
         if (showAddPasswordDialog) {
             AddPasswordDialog(
@@ -110,15 +106,22 @@ fun HomeScreen(
                 token = token
             )
         }
+
         if (selectedPassword != null) {
             PasswordDetailsDialog(
                 password = selectedPassword!!,
                 onClose = { selectedPassword = null },
-                onCopy = { value -> println("Copié : $value") },
-                onEdit = { password -> println("Éditer le mot de passe : ${password.service}") },
+                onCopy = { /* TODO: Implement copy functionality */ },
+                onEdit = { /* TODO: Implement edit functionality */ },
                 viewModel = passwordViewModel,
                 token = token
             )
         }
+
+        BottomBar(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            navController = navController,
+            currentRoute = "home/$token"
+        )
     }
 }

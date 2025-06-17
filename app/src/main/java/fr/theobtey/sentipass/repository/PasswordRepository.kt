@@ -17,4 +17,8 @@ class PasswordRepository(private val apiService: ApiService) {
     suspend fun updatePassword(id: Int, passwordRequest: PasswordRequest, token: String): Response<Unit> {
         return apiService.updatePassword(id, passwordRequest, "Bearer $token")
     }
+
+    suspend fun deletePassword(id: Int, token: String): Response<Unit> {
+        return apiService.deletePassword("Bearer $token", id.toString())
+    }
 }
