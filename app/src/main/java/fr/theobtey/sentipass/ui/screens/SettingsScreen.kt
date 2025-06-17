@@ -166,13 +166,38 @@ fun SettingsScreen(
             NukeDialog(
                 onDismiss = { showNukeDialog = false },
                 onConfirm = {
-                    // TODO: Implement nuke functionality
-                    // 1. Delete all passwords
-                    // 2. Delete account from database
-                    // 3. Clear local data
-                    // 4. Navigate to login
-                    println("Nuke confirmed")
-                    showNukeDialog = false
+                    coroutineScope.launch {
+                        try {
+                            val response = RetrofitClient.api.nukeAccount(
+                                token = "Bearer $token"
+                            )
+                            
+                            showNukeDialog = false
+                            
+                            if (response.isSuccessful) {
+                                // Clear local data
+                                val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+                                val sharedPreferences = EncryptedSharedPreferences.create(
+                                    "sentipass_prefs",
+                                    masterKeyAlias,
+                                    context,
+                                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                                )
+                                sharedPreferences.edit().clear().apply()
+                                
+                                // Navigate to login
+                                navController.navigate("login") {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                            } else {
+                                snackbarHostState.showSnackbar("Failed to delete account: ${response.message()}")
+                            }
+                        } catch (e: Exception) {
+                            showNukeDialog = false
+                            snackbarHostState.showSnackbar("Error: ${e.message}")
+                        }
+                    }
                 }
             )
         }
