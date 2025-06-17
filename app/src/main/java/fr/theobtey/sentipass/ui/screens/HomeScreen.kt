@@ -27,6 +27,8 @@ import fr.theobtey.sentipass.viewmodel.PasswordViewModel
 import fr.theobtey.sentipass.data.network.RetrofitClient
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import android.content.ClipData
+import android.content.ClipboardManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +43,7 @@ fun HomeScreen(
     var showCategories by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
     val passwords by passwordViewModel.passwords.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         passwordViewModel.fetchPasswords(token)
@@ -111,7 +114,11 @@ fun HomeScreen(
             PasswordDetailsDialog(
                 password = selectedPassword!!,
                 onClose = { selectedPassword = null },
-                onCopy = { /* TODO: Implement copy functionality */ },
+                onCopy = { textToCopy ->
+                    val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("Copied Text", textToCopy)
+                    clipboardManager.setPrimaryClip(clip)
+                },
                 onEdit = { /* TODO: Implement edit functionality */ },
                 viewModel = passwordViewModel,
                 token = token

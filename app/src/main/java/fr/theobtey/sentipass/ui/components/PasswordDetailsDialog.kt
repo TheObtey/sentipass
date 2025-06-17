@@ -148,6 +148,17 @@ fun PasswordDetailsDialog(
                         }
                     }
                 )
+                
+                // Notes section (only show if note exists)
+                if (!updatedPassword.note.isNullOrBlank()) {
+                    Spacer(Modifier.height(12.dp))
+                    
+                    DetailRow(
+                        label = "Notes",
+                        value = updatedPassword.note!!,
+                        onCopy = { onCopy(updatedPassword.note!!) }
+                    )
+                }
             }
         }
     }
@@ -178,20 +189,24 @@ private fun DetailRow(
             text = label,
             style = PasswordDetailsSubtitleStyle,
             color = Gray,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.width(120.dp)
         )
         Text(
             text = value,
             style = PasswordDetailsSubtitleStyle,
             color = valueColor,
-            modifier = Modifier.padding(end = 4.dp)
+            maxLines = 2,
+            overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis,
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 8.dp)
         )
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
-                .padding(end = 4.dp)
+                .padding(start = 4.dp)
                 .height(24.dp)
         ) {
             onCopy?.let {
