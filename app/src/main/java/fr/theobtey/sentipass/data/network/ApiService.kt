@@ -7,6 +7,7 @@ import fr.theobtey.sentipass.data.model.PasswordResponse
 import fr.theobtey.sentipass.data.model.RegisterRequest
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -35,6 +36,28 @@ interface ApiService {
     suspend fun updatePassword(
         @Path("id") id: Int,
         @Body passwordRequest: PasswordRequest,
+        @Header("Authorization") token: String
+    ): Response<Unit>
+
+    @PUT("update-master-password")
+    suspend fun updateMasterPassword(
+        @Header("Authorization") token: String,
+        @Body request: Map<String, String>
+    ): Response<Unit>
+
+    @DELETE("passwords/delete-password/{id}")
+    suspend fun deletePassword(
+        @Header("Authorization") token: String,
+        @Path("id") passwordId: String
+    ): Response<Unit>
+
+    @DELETE("passwords/delete-all-passwords")
+    suspend fun deleteAllPasswords(
+        @Header("Authorization") token: String
+    ): Response<Unit>
+
+    @DELETE("nuke")
+    suspend fun nukeAccount(
         @Header("Authorization") token: String
     ): Response<Unit>
 }
