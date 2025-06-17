@@ -11,6 +11,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,10 @@ import fr.theobtey.sentipass.data.model.LoginResponse
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.runtime.collectAsState
+import fr.theobtey.sentipass.viewmodel.RegisterState
+import fr.theobtey.sentipass.viewmodel.RegisterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,6 +70,47 @@ fun RegisterScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+    val registerViewModel: RegisterViewModel = viewModel()
+    val registerState by registerViewModel.registerState.collectAsState()
+
+    LaunchedEffect(registerState) {
+        when (registerState) {
+            is RegisterState.Loading -> {
+                isLoading = true
+            }
+            is RegisterState.Success -> {
+                isLoading = false
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = "Account created successfully! Please login.",
+                        duration = SnackbarDuration.Short
+                    )
+                }
+                navController.navigate("login") {
+                    popUpTo("register") { inclusive = true }
+                }
+                registerViewModel.resetState()
+            }
+            is RegisterState.Error -> {
+                isLoading = false
+                val errorMessage = (registerState as RegisterState.Error).message
+                if (errorMessage.contains("Account already exists")) {
+                    accountExistsError = errorMessage
+                } else {
+                    coroutineScope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = errorMessage,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+                registerViewModel.resetState()
+            }
+            RegisterState.Idle -> {
+                isLoading = false
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
