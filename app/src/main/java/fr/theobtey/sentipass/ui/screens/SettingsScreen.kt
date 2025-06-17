@@ -22,17 +22,24 @@ import fr.theobtey.sentipass.ui.theme.*
 import androidx.navigation.NavController
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import fr.theobtey.sentipass.data.network.RetrofitClient
 
 @Composable
 fun SettingsScreen(
     token: String,
     navController: NavController
-) { /* TODO: Implement the buttons functionality */
+) {
     var showDisconnectDialog by remember { mutableStateOf(false) }
     var showDeleteAllPasswordsDialog by remember { mutableStateOf(false) }
     var showNukeDialog by remember { mutableStateOf(false) }
     var showChangePasswordDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
 
     Box(
         modifier = Modifier
@@ -100,6 +107,13 @@ fun SettingsScreen(
             currentRoute = "settings/$token"
         )
 
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        )
+
         if (showDisconnectDialog) {
             DisconnectDialog(
                 onDismiss = { showDisconnectDialog = false },
@@ -152,10 +166,27 @@ fun SettingsScreen(
             ChangePasswordDialog(
                 onDismiss = { showChangePasswordDialog = false },
                 onConfirm = { currentPassword, newPassword, confirmPassword ->
-                    if (newPassword == confirmPassword) {
-                        // TODO: Implement password change functionality
-                        println("Password change confirmed")
-                        showChangePasswordDialog = false
+                    coroutineScope.launch {
+                        try {
+                            val response = RetrofitClient.api.updateMasterPassword(
+                                token = "Bearer $token",
+                                request = mapOf(
+                                    "oldPassword" to currentPassword,
+                                    "newPassword" to newPassword
+                                )
+                            )
+                            
+                            showChangePasswordDialog = false
+                
+                            if (response.isSuccessful) {
+                                snackbarHostState.showSnackbar("Password updated successfully")
+                            } else {
+                                snackbarHostState.showSnackbar("Failed to update password: ${response.message()}")
+                            }
+                        } catch (e: Exception) {
+                            showChangePasswordDialog = false
+                            snackbarHostState.showSnackbar("Error: ${e.message}")
+                        }
                     }
                 }
             )
