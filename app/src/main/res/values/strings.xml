@@ -155,5 +155,8 @@
         <item>Strong</item>
     </string-array>
 
+    <string name="settings_title">Settings</string>
+    <string name="settings_disconnect">Disconnect</string>
+    <string name="settings_disconnect_description">Log out from your account</string>
 
 </resources>
