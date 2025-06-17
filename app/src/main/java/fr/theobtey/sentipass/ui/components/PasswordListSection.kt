@@ -21,6 +21,10 @@ import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import fr.theobtey.sentipass.ui.theme.TitleTextStyle
 
 data class PasswordItem(
     val name: String,
@@ -112,21 +116,51 @@ fun PasswordListSection(
                 selectedPassword = null
             },
             title = { 
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { 
+                            showPopup = false
+                            selectedPassword = null
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back",
+                            tint = White
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = selectedPassword!!.service,
+                        style = TitleTextStyle,
+                        color = White
+                    )
+                }
+            },
+            text = { 
                 Text(
-                    text = selectedPassword!!.service,
-                    style = MaterialTheme.typography.titleLarge,
+                    text = "Are you sure you want to delete this password?",
+                    style = DefaultTextStyle,
                     color = White
                 )
             },
-            text = { },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = { 
+                        // TODO: Implement delete functionality
                         showPopup = false
                         selectedPassword = null
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Red
+                    ),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Go Back")
+                    Text("DELETE")
                 }
             },
             containerColor = Primary
