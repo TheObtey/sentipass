@@ -28,7 +28,6 @@ fun PasswordDetailsDialog(
     password: PasswordResponse,
     onClose: () -> Unit,
     onCopy: (String) -> Unit,
-    onEdit: (PasswordResponse) -> Unit,
     viewModel: PasswordViewModel,
     token: String
 ) {

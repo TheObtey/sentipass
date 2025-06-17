@@ -119,7 +119,6 @@ fun HomeScreen(
                     val clip = ClipData.newPlainText("Copied Text", textToCopy)
                     clipboardManager.setPrimaryClip(clip)
                 },
-                onEdit = { /* TODO: Implement edit functionality */ },
                 viewModel = passwordViewModel,
                 token = token
             )
