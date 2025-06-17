@@ -1,5 +1,6 @@
 package fr.theobtey.sentipass.ui.screens
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,14 @@ import androidx.navigation.NavController
 import fr.theobtey.sentipass.data.network.RetrofitClient
 import fr.theobtey.sentipass.repository.PasswordRepository
 import fr.theobtey.sentipass.viewmodel.PasswordViewModel
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import fr.theobtey.sentipass.data.model.PasswordResponse
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import android.media.MediaScannerConnection
+import android.os.Environment
 
 @Composable
 fun ToolsScreen(
@@ -29,6 +38,9 @@ fun ToolsScreen(
     val toolOptions = context.resources.getStringArray(R.array.tool_page_options)
     var showPasswordGeneratorDialog by remember { mutableStateOf(false) }
     var showPasswordHealthDialog by remember { mutableStateOf(false) }
+    var showExportSuccessDialog by remember { mutableStateOf(false) }
+    var showExportErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
     
     val repository = remember { PasswordRepository(RetrofitClient.api) }
     val passwordViewModel = remember { PasswordViewModel(repository) }
@@ -71,7 +83,15 @@ fun ToolsScreen(
                 ToolCard(
                     title = toolOptions[2],
                     icon = R.drawable.export_passwords,
-                    onClick = { /* TODO: Implement Export Passwords */ }
+                    onClick = { 
+                        try {
+                            exportPasswords(context, passwordViewModel.passwords.value)
+                            showExportSuccessDialog = true
+                        } catch (e: Exception) {
+                            errorMessage = e.message ?: "Unknown error occurred"
+                            showExportErrorDialog = true
+                        }
+                    }
                 )
             }
         }
@@ -87,11 +107,75 @@ fun ToolsScreen(
             )
         }
 
+        if (showExportSuccessDialog) {
+            AlertDialog(
+                onDismissRequest = { showExportSuccessDialog = false },
+                title = { Text("Success") },
+                text = { 
+                    Text(
+                        "Passwords exported successfully to:\n" +
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = { showExportSuccessDialog = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = Complementary)
+                    ) {
+                        Text("OK")
+                    }
+                },
+                containerColor = Primary
+            )
+        }
+
+        if (showExportErrorDialog) {
+            AlertDialog(
+                onDismissRequest = { showExportErrorDialog = false },
+                title = { Text("Error") },
+                text = { Text(errorMessage) },
+                confirmButton = {
+                    Button(
+                        onClick = { showExportErrorDialog = false },
+                        colors = ButtonDefaults.buttonColors(containerColor = Complementary)
+                    ) {
+                        Text("OK")
+                    }
+                },
+                containerColor = Primary
+            )
+        }
+
         BottomBar(
             modifier = Modifier.align(Alignment.BottomCenter),
             navController = navController,
             currentRoute = "tools/$token"
         )
+    }
+}
+
+private fun exportPasswords(context: Context, passwords: List<PasswordResponse>) {
+    val gson = GsonBuilder().setPrettyPrinting().create()
+    val json = gson.toJson(passwords)
+    
+    val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+    val fileName = "sentipass_export_$timestamp.json"
+    
+    // Get the public Downloads directory
+    val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+    val file = File(downloadsDir, fileName)
+    
+    try {
+        file.writeText(json)
+        // Notify the media scanner to make the file visible in the Downloads app
+        MediaScannerConnection.scanFile(
+            context,
+            arrayOf(file.absolutePath),
+            null,
+            null
+        )
+    } catch (e: Exception) {
+        throw Exception("Failed to save file: ${e.message}")
     }
 }
 
