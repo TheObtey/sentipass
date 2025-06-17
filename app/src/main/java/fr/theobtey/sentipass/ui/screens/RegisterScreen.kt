@@ -46,6 +46,7 @@ import fr.theobtey.sentipass.data.model.RegisterRequest
 import fr.theobtey.sentipass.data.model.LoginResponse
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -92,7 +93,7 @@ fun RegisterScreen(
                 style = AppNameTextStyle
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(64.dp))
 
             OutlinedTextField(
                 value = username,
@@ -100,11 +101,8 @@ fun RegisterScreen(
                     username = it
                     accountExistsError = null
                 },
-                label = { Text("Username", color = Gray) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
-                ),
+                label = { Text(stringResource(R.string.entry_username), style = DefaultTextStyle) },
+                singleLine = true,
                 isError = accountExistsError != null,
                 supportingText = {
                     if (accountExistsError != null) {
@@ -114,100 +112,56 @@ fun RegisterScreen(
                         )
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { 
                     password = it
                     passwordError = null
-                    confirmPasswordError = null
-                    accountExistsError = null
                 },
-                label = { Text("Password", color = Gray) },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedTextColor = White,
-                    unfocusedTextColor = White,
-                    cursorColor = White,
-                    focusedBorderColor = Complementary,
-                    unfocusedBorderColor = Gray,
-                    focusedLabelColor = Gray,
-                    unfocusedLabelColor = Gray
-                ),
+                label = { Text(stringResource(R.string.entry_password), style = DefaultTextStyle) },
+                singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                isError = passwordError != null || confirmPasswordError != null || accountExistsError != null,
+                isError = passwordError != null,
                 supportingText = {
                     if (passwordError != null) {
                         Text(
                             text = passwordError!!,
                             color = MaterialTheme.colorScheme.error
                         )
-                    } else if (confirmPasswordError != null) {
-                        Text(
-                            text = confirmPasswordError!!,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    } else if (accountExistsError != null) {
-                        Text(
-                            text = accountExistsError!!,
-                            color = MaterialTheme.colorScheme.error
-                        )
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { 
                     confirmPassword = it
                     confirmPasswordError = null
-                    accountExistsError = null
                 },
-                label = { Text("Confirm Password", color = Gray) },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedTextColor = White,
-                    unfocusedTextColor = White,
-                    cursorColor = White,
-                    focusedBorderColor = Complementary,
-                    unfocusedBorderColor = Gray,
-                    focusedLabelColor = Gray,
-                    unfocusedLabelColor = Gray
-                ),
+                label = { Text(stringResource(R.string.entry_password), style = DefaultTextStyle) },
+                singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                isError = confirmPasswordError != null || accountExistsError != null,
+                isError = confirmPasswordError != null,
                 supportingText = {
                     if (confirmPasswordError != null) {
                         Text(
                             text = confirmPasswordError!!,
                             color = MaterialTheme.colorScheme.error
                         )
-                    } else if (accountExistsError != null) {
-                        Text(
-                            text = accountExistsError!!,
-                            color = MaterialTheme.colorScheme.error
-                        )
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(64.dp))
 
             Button(
                 onClick = {
@@ -215,51 +169,16 @@ fun RegisterScreen(
                         confirmPasswordError = "Passwords do not match"
                         return@Button
                     }
-                    coroutineScope.launch {
-                        isLoading = true
-                        try {
-                            val response = RetrofitClient.api.register(
-                                request = RegisterRequest(
-                                    username = username,
-                                    password = password
-                                )
+                    if (username.isBlank() || password.isBlank()) {
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = "Please fill all fields",
+                                duration = SnackbarDuration.Short
                             )
-                            
-                            if (response.isSuccessful) {
-                                // Show success message and navigate to login
-                                snackbarHostState.showSnackbar(
-                                    message = "Account created successfully! Please login.",
-                                    duration = SnackbarDuration.Short
-                                )
-                                navController.navigate("login") {
-                                    popUpTo("register") { inclusive = true }
-                                }
-                            } else {
-                                val errorBody = response.errorBody()?.string()
-                                when (response.code()) {
-                                    409 -> {
-                                        accountExistsError = "This username is already taken"
-                                    }
-                                    400 -> {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Missing required fields",
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    }
-                                    else -> {
-                                        snackbarHostState.showSnackbar(
-                                            message = "Registration failed: ${errorBody ?: "Unknown error"}",
-                                            duration = SnackbarDuration.Short
-                                        )
-                                    }
-                                }
-                            }
-                        } catch (e: Exception) {
-                            snackbarHostState.showSnackbar("Error: ${e.message}")
-                        } finally {
-                            isLoading = false
                         }
+                        return@Button
                     }
+                    onRegisterClick(username, password)
                 },
                 colors = ButtonDefaults.buttonColors(containerColor = Complementary),
                 modifier = Modifier
@@ -273,7 +192,7 @@ fun RegisterScreen(
                     )
                 } else {
                     Text(
-                        text = "GET STARTED",
+                        text = stringResource(R.string.button_get_started),
                         style = TitleTextStyle,
                         color = White
                     )
@@ -289,5 +208,12 @@ fun RegisterScreen(
                 )
             }
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        )
     }
 }
