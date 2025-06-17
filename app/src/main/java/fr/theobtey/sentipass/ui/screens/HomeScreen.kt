@@ -89,13 +89,13 @@ fun HomeScreen(
             onClick = { showAddPasswordDialog = true },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(16.dp),
-            containerColor = Complementary
+                .padding(end = 18.dp, bottom = 128.dp),
+            containerColor = Color.Transparent
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_add),
                 contentDescription = "Add Password",
-                tint = White
+                tint = Complementary
             )
         }
 
