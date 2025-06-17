@@ -67,19 +67,19 @@ fun SearchSection(
                 .height(48.dp)
         )
 
-        Spacer(modifier = Modifier.width(18.dp))
+        // Spacer(modifier = Modifier.width(18.dp))
 
-        IconButton(
-            onClick = onFilterClick,
-            modifier = Modifier
-                .size(32.dp)
-                .background(Color(0xFF2B2F36), RoundedCornerShape(16.dp))
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_filter),
-                contentDescription = "Filter Icon",
-                tint = Gray
-            )
-        }
+        // IconButton(
+        //     onClick = onFilterClick,
+        //     modifier = Modifier
+        //         .size(32.dp)
+        //         .background(Color(0xFF2B2F36), RoundedCornerShape(16.dp))
+        // ) {
+        //     Icon(
+        //         painter = painterResource(R.drawable.ic_filter),
+        //         contentDescription = "Filter Icon",
+        //         tint = Gray
+        //     )
+        // }
     }
 }

@@ -67,10 +67,10 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            if (showCategories) {
-                CategoriesSection()
-                Spacer(modifier = Modifier.height(24.dp))
-            }
+            // if (showCategories) {
+            //     CategoriesSection()
+            //     Spacer(modifier = Modifier.height(24.dp))
+            // }
 
             PasswordListSection(
                 passwords = passwords.filter { password ->
