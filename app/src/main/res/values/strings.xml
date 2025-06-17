@@ -159,7 +159,7 @@
     <string name="settings_change_password_current">Current Password</string>
     <string name="settings_change_password_new">New Password</string>
     <string name="settings_change_password_confirm">Confirm New Password</string>
-    <string name="settings_change_password_error_mismatch">Passwords doesn't match</string>
+    <string name="settings_change_password_error_mismatch">Passwords dont match</string>
 
     <string name="settings_nuke">Nuke</string>
     <string name="settings_nuke_description">Delete your account and all data permanently</string>
