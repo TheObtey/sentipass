@@ -3,6 +3,7 @@ package fr.theobtey.sentipass.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -41,6 +44,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import fr.theobtey.sentipass.data.network.RetrofitClient
 import fr.theobtey.sentipass.data.model.RegisterRequest
 import fr.theobtey.sentipass.data.model.LoginResponse
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.MaterialTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +57,9 @@ fun RegisterScreen(
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
-    var showPasswordMismatchError by remember { mutableStateOf(false) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+    var confirmPasswordError by remember { mutableStateOf<String?>(null) }
+    var accountExistsError by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -89,27 +96,36 @@ fun RegisterScreen(
 
             OutlinedTextField(
                 value = username,
-                onValueChange = { username = it },
+                onValueChange = { 
+                    username = it
+                    accountExistsError = null
+                },
                 label = { Text("Username", color = Gray) },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedTextColor = White,
-                    unfocusedTextColor = White,
-                    cursorColor = White,
-                    focusedBorderColor = Complementary,
-                    unfocusedBorderColor = Gray,
-                    focusedLabelColor = Gray,
-                    unfocusedLabelColor = Gray
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
                 ),
+                isError = accountExistsError != null,
+                supportingText = {
+                    if (accountExistsError != null) {
+                        Text(
+                            text = accountExistsError!!,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(horizontal = 16.dp)
             )
 
             OutlinedTextField(
                 value = password,
                 onValueChange = { 
                     password = it
-                    showPasswordMismatchError = false
+                    passwordError = null
+                    confirmPasswordError = null
+                    accountExistsError = null
                 },
                 label = { Text("Password", color = Gray) },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -122,16 +138,40 @@ fun RegisterScreen(
                     unfocusedLabelColor = Gray
                 ),
                 visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                isError = passwordError != null || confirmPasswordError != null || accountExistsError != null,
+                supportingText = {
+                    if (passwordError != null) {
+                        Text(
+                            text = passwordError!!,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    } else if (confirmPasswordError != null) {
+                        Text(
+                            text = confirmPasswordError!!,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    } else if (accountExistsError != null) {
+                        Text(
+                            text = accountExistsError!!,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(horizontal = 16.dp)
             )
 
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { 
                     confirmPassword = it
-                    showPasswordMismatchError = false
+                    confirmPasswordError = null
+                    accountExistsError = null
                 },
                 label = { Text("Confirm Password", color = Gray) },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -144,64 +184,80 @@ fun RegisterScreen(
                     unfocusedLabelColor = Gray
                 ),
                 visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                isError = confirmPasswordError != null || accountExistsError != null,
+                supportingText = {
+                    if (confirmPasswordError != null) {
+                        Text(
+                            text = confirmPasswordError!!,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    } else if (accountExistsError != null) {
+                        Text(
+                            text = accountExistsError!!,
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(horizontal = 16.dp)
             )
-
-            if (showPasswordMismatchError) {
-                Text(
-                    text = "Passwords do not match",
-                    color = Red,
-                    style = DefaultTextStyle,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
 
             Spacer(modifier = Modifier.height(64.dp))
 
             Button(
                 onClick = {
                     if (password != confirmPassword) {
-                        showPasswordMismatchError = true
-                    } else {
-                        coroutineScope.launch {
-                            isLoading = true
-                            try {
-                                val response = RetrofitClient.api.register(
-                                    request = RegisterRequest(
-                                        username = username,
-                                        password = password
-                                    )
+                        confirmPasswordError = "Passwords do not match"
+                        return@Button
+                    }
+                    coroutineScope.launch {
+                        isLoading = true
+                        try {
+                            val response = RetrofitClient.api.register(
+                                request = RegisterRequest(
+                                    username = username,
+                                    password = password
                                 )
-                                
-                                if (response.isSuccessful) {
-                                    // Store token
-                                    val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-                                    val sharedPreferences = EncryptedSharedPreferences.create(
-                                        "sentipass_prefs",
-                                        masterKeyAlias,
-                                        context,
-                                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                                    )
-                                    val token = "Bearer ${response.body()}"
-                                    sharedPreferences.edit()
-                                        .putString("token", token)
-                                        .apply()
-                                    
-                                    // Navigate to home
-                                    navController.navigate("home/$token") {
-                                        popUpTo(0) { inclusive = true }
-                                    }
-                                } else {
-                                    snackbarHostState.showSnackbar("Registration failed: ${response.message()}")
+                            )
+                            
+                            if (response.isSuccessful) {
+                                // Show success message and navigate to login
+                                snackbarHostState.showSnackbar(
+                                    message = "Account created successfully! Please login.",
+                                    duration = SnackbarDuration.Short
+                                )
+                                navController.navigate("login") {
+                                    popUpTo("register") { inclusive = true }
                                 }
-                            } catch (e: Exception) {
-                                snackbarHostState.showSnackbar("Error: ${e.message}")
-                            } finally {
-                                isLoading = false
+                            } else {
+                                val errorBody = response.errorBody()?.string()
+                                when (response.code()) {
+                                    409 -> {
+                                        accountExistsError = "This username is already taken"
+                                    }
+                                    400 -> {
+                                        snackbarHostState.showSnackbar(
+                                            message = "Missing required fields",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                    else -> {
+                                        snackbarHostState.showSnackbar(
+                                            message = "Registration failed: ${errorBody ?: "Unknown error"}",
+                                            duration = SnackbarDuration.Short
+                                        )
+                                    }
+                                }
                             }
+                        } catch (e: Exception) {
+                            snackbarHostState.showSnackbar("Error: ${e.message}")
+                        } finally {
+                            isLoading = false
                         }
                     }
                 },
