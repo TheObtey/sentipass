@@ -140,9 +140,24 @@ fun SettingsScreen(
             DeleteAllPasswordsDialog(
                 onDismiss = { showDeleteAllPasswordsDialog = false },
                 onConfirm = {
-                    // TODO: Implement delete all passwords functionality
-                    println("Delete all passwords confirmed")
-                    showDeleteAllPasswordsDialog = false
+                    coroutineScope.launch {
+                        try {
+                            val response = RetrofitClient.api.deleteAllPasswords(
+                                token = "Bearer $token"
+                            )
+                            
+                            showDeleteAllPasswordsDialog = false
+                            
+                            if (response.isSuccessful) {
+                                snackbarHostState.showSnackbar("All passwords deleted successfully")
+                            } else {
+                                snackbarHostState.showSnackbar("Failed to delete passwords: ${response.message()}")
+                            }
+                        } catch (e: Exception) {
+                            showDeleteAllPasswordsDialog = false
+                            snackbarHostState.showSnackbar("Error: ${e.message}")
+                        }
+                    }
                 }
             )
         }
