@@ -10,10 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.ui.components.*
 import fr.theobtey.sentipass.ui.theme.*
@@ -27,6 +29,7 @@ fun SettingsScreen(
     navController: NavController
 ) {
     var showDisconnectDialog by remember { mutableStateOf(false) }
+    var showDeleteAllPasswordsDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Box(
@@ -62,6 +65,14 @@ fun SettingsScreen(
                         isDestructive = true
                     )
                 }
+                item {
+                    SettingsButton(
+                        title = stringResource(R.string.settings_delete_all_passwords),
+                        description = stringResource(R.string.settings_delete_all_passwords_description),
+                        onClick = { showDeleteAllPasswordsDialog = true },
+                        isDestructive = true
+                    )
+                }
             }
         }
 
@@ -92,6 +103,74 @@ fun SettingsScreen(
                 }
             )
         }
+
+        if (showDeleteAllPasswordsDialog) {
+            DeleteAllPasswordsDialog(
+                onDismiss = { showDeleteAllPasswordsDialog = false },
+                onConfirm = {
+                    // TODO: Implement delete all passwords functionality
+                    println("Delete all passwords confirmed")
+                    showDeleteAllPasswordsDialog = false
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun DeleteAllPasswordsDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0x99000000))
+            .clickable(enabled = false) { }
+    ) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(24.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Primary)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_delete_all_passwords_confirmation_title),
+                    style = DefaultTextStyle,
+                    color = White,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                Text(
+                    text = stringResource(R.string.settings_delete_all_passwords_confirmation_message),
+                    style = DefaultTextStyle,
+                    color = Gray,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+                Button(
+                    onClick = onConfirm,
+                    colors = ButtonDefaults.buttonColors(containerColor = Red),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_delete_all_passwords_confirmation_confirm),
+                        color = White
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                TextButton(onClick = onDismiss) {
+                    Text(
+                        text = stringResource(R.string.settings_delete_all_passwords_confirmation_cancel),
+                        color = Complementary
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -108,7 +187,7 @@ fun SettingsButton(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isDestructive) MaterialTheme.colorScheme.error else Primary
+            containerColor = if (isDestructive) Red else Primary
         )
     ) {
         Column(
@@ -128,6 +207,57 @@ fun SettingsButton(
                 style = DefaultTextStyle,
                 color = Gray
             )
+        }
+    }
+}
+
+@Composable
+fun DisconnectDialog(
+    onDismiss: () -> Unit,
+    onDisconnect: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0x99000000))
+            .clickable(enabled = false) { }
+    ) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(24.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Primary)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_disconnect_confirmation_title),
+                    style = DefaultTextStyle,
+                    color = White,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+                Button(
+                    onClick = onDisconnect,
+                    colors = ButtonDefaults.buttonColors(containerColor = Red),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.settings_disconnect_confirmation_confirm),
+                        color = White
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                TextButton(onClick = onDismiss) {
+                    Text(
+                        text = stringResource(R.string.settings_disconnect_confirmation_cancel),
+                        color = Complementary
+                    )
+                }
+            }
         }
     }
 } 

@@ -78,11 +78,6 @@
         <item>Strong</item>
     </string-array>
 
-
-
-
-
-
     <!-- Buttons -->
     <string-array name="buttons">
         <item>GET STARTED</item> <!-- buttons[0] -->
@@ -155,8 +150,18 @@
         <item>Strong</item>
     </string-array>
 
+    <!-- Settings -->
     <string name="settings_title">Settings</string>
     <string name="settings_disconnect">Disconnect</string>
-    <string name="settings_disconnect_description">Log out from your account</string>
+    <string name="settings_disconnect_description">Disconnect your account and remove all data</string>
+    <string name="settings_disconnect_confirmation_title">Disconnect Account</string>
+    <string name="settings_disconnect_confirmation_confirm">Disconnect</string>
+    <string name="settings_disconnect_confirmation_cancel">Cancel</string>
+    <string name="settings_delete_all_passwords">Delete All Passwords</string>
+    <string name="settings_delete_all_passwords_description">Permanently delete all your saved passwords</string>
+    <string name="settings_delete_all_passwords_confirmation_title">Delete All Passwords</string>
+    <string name="settings_delete_all_passwords_confirmation_message">This action cannot be undone. All your saved passwords will be permanently deleted.</string>
+    <string name="settings_delete_all_passwords_confirmation_confirm">Delete All Passwords</string>
+    <string name="settings_delete_all_passwords_confirmation_cancel">Cancel</string>
 
 </resources>
