@@ -1,5 +1,7 @@
 package fr.theobtey.sentipass.ui.components
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,6 +23,7 @@ import fr.theobtey.sentipass.ui.theme.*
 import fr.theobtey.sentipass.utils.getPasswordStrength
 import fr.theobtey.sentipass.viewmodel.PasswordViewModel
 import kotlinx.coroutines.flow.collectLatest
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +36,7 @@ fun PasswordDetailsDialog(
 ) {
     var reveal by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     
     // Observe the passwords list to get the updated password
     val passwords by viewModel.passwords.collectAsState()
@@ -141,7 +145,10 @@ fun PasswordDetailsDialog(
                     onCopy = { onCopy(updatedPassword.url.orEmpty()) },
                     trailingIcon = {
                         IconButton(onClick = {
-                            /* TODO: open website */
+                            updatedPassword.url?.let { url ->
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                context.startActivity(intent)
+                            }
                         }) {
                             Icon(Icons.Default.OpenInNew, contentDescription = "Open Website")
                         }
