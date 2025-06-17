@@ -32,6 +32,7 @@ import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.data.model.PasswordResponse
 import fr.theobtey.sentipass.ui.theme.*
 import fr.theobtey.sentipass.utils.analyzePasswords
+import fr.theobtey.sentipass.utils.generatePassword
 import fr.theobtey.sentipass.viewmodel.PasswordViewModel
 
 // Data class for password analysis results
@@ -190,7 +191,15 @@ private fun StrengthIndicator(strength: String, colorRes: Int) {
 @Composable
 private fun FixButton() {
     Button(
-        onClick = { /* TODO: Implement fix functionality */ },
+        onClick = { 
+            val strongPassword = generatePassword(
+                length = 24,
+                useUppercase = true,
+                useDigits = true,
+                useSymbols = true
+            )
+            println("Generated strong password: $strongPassword")
+        },
         colors = ButtonDefaults.buttonColors(containerColor = Complementary),
         modifier = Modifier.size(width = 80.dp, height = 30.dp)
     ) {
