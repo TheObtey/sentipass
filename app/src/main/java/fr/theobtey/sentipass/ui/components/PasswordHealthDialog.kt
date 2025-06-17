@@ -155,7 +155,6 @@ private fun PasswordHealthItem(result: PasswordHealthResult) {
     ) {
         ServiceName(result.password.service)
         StrengthIndicator(result.strength, result.colorRes)
-        FixButton()
     }
 }
 
@@ -185,28 +184,4 @@ private fun StrengthIndicator(strength: String, colorRes: Int) {
         ),
         modifier = Modifier.padding(horizontal = 16.dp)
     )
-}
-
-// Fix button component
-@Composable
-private fun FixButton() {
-    Button(
-        onClick = { 
-            val strongPassword = generatePassword(
-                length = 24,
-                useUppercase = true,
-                useDigits = true,
-                useSymbols = true
-            )
-            println("Generated strong password: $strongPassword")
-        },
-        colors = ButtonDefaults.buttonColors(containerColor = Complementary),
-        modifier = Modifier.size(width = 80.dp, height = 30.dp)
-    ) {
-        Text(
-            text = "FIX",
-            style = PasswordDetailsSubtitleStyle,
-            color = White
-        )
-    }
 } 
