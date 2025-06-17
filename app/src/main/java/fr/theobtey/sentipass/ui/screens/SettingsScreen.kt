@@ -79,7 +79,7 @@ fun SettingsScreen(
                         title = stringResource(R.string.settings_disconnect),
                         description = stringResource(R.string.settings_disconnect_description),
                         onClick = { showDisconnectDialog = true },
-                        isDestructive = true
+                        isDestructive = false
                     )
                 }
                 item {
