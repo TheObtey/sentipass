@@ -31,6 +31,7 @@ fun SettingsScreen(
     var showDisconnectDialog by remember { mutableStateOf(false) }
     var showDeleteAllPasswordsDialog by remember { mutableStateOf(false) }
     var showNukeDialog by remember { mutableStateOf(false) }
+    var showChangePasswordDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Box(
@@ -58,6 +59,14 @@ fun SettingsScreen(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                item {
+                    SettingsButton(
+                        title = stringResource(R.string.settings_change_password),
+                        description = stringResource(R.string.settings_change_password_description),
+                        onClick = { showChangePasswordDialog = true },
+                        isDestructive = false
+                    )
+                }
                 item {
                     SettingsButton(
                         title = stringResource(R.string.settings_disconnect),
@@ -138,6 +147,19 @@ fun SettingsScreen(
                 }
             )
         }
+
+        if (showChangePasswordDialog) {
+            ChangePasswordDialog(
+                onDismiss = { showChangePasswordDialog = false },
+                onConfirm = { currentPassword, newPassword, confirmPassword ->
+                    if (newPassword == confirmPassword) {
+                        // TODO: Implement password change functionality
+                        println("Password change confirmed")
+                        showChangePasswordDialog = false
+                    }
+                }
+            )
+        }
     }
 }
 
@@ -211,7 +233,7 @@ fun SettingsButton(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isDestructive) Red else Primary
+            containerColor = if (isDestructive) Red else Complementary
         )
     ) {
         Column(
@@ -324,6 +346,138 @@ fun NukeDialog(
                 Button(
                     onClick = onConfirm,
                     colors = ButtonDefaults.buttonColors(containerColor = Red),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(R.string.dialog_confirm),
+                        color = White
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                TextButton(onClick = onDismiss) {
+                    Text(
+                        text = stringResource(R.string.dialog_cancel),
+                        color = Complementary
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ChangePasswordDialog(
+    onDismiss: () -> Unit,
+    onConfirm: (currentPassword: String, newPassword: String, confirmPassword: String) -> Unit
+) {
+    var currentPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+    var showPasswordMismatchError by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0x99000000))
+    ) {
+        Card(
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .padding(24.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(Primary)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_change_password_confirmation_title),
+                    style = DefaultTextStyle,
+                    color = White,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                )
+
+                OutlinedTextField(
+                    value = currentPassword,
+                    onValueChange = { currentPassword = it },
+                    label = { Text(stringResource(R.string.settings_change_password_current)) },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Primary,
+                        unfocusedContainerColor = Primary,
+                        focusedTextColor = White,
+                        unfocusedTextColor = White,
+                        focusedLabelColor = Gray,
+                        unfocusedLabelColor = Gray
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    value = newPassword,
+                    onValueChange = { 
+                        newPassword = it
+                        showPasswordMismatchError = false
+                    },
+                    label = { Text(stringResource(R.string.settings_change_password_new)) },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Primary,
+                        unfocusedContainerColor = Primary,
+                        focusedTextColor = White,
+                        unfocusedTextColor = White,
+                        focusedLabelColor = Gray,
+                        unfocusedLabelColor = Gray
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                OutlinedTextField(
+                    value = confirmPassword,
+                    onValueChange = { 
+                        confirmPassword = it
+                        showPasswordMismatchError = false
+                    },
+                    label = { Text(stringResource(R.string.settings_change_password_confirm)) },
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Primary,
+                        unfocusedContainerColor = Primary,
+                        focusedTextColor = White,
+                        unfocusedTextColor = White,
+                        focusedLabelColor = Gray,
+                        unfocusedLabelColor = Gray
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp)
+                )
+
+                if (showPasswordMismatchError) {
+                    Text(
+                        text = stringResource(R.string.settings_change_password_error_mismatch),
+                        color = Red,
+                        style = DefaultTextStyle,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        println("New password: '$newPassword'")
+                        println("Confirm password: '$confirmPassword'")
+                        println("Are equal: ${newPassword == confirmPassword}")
+                        
+                        if (newPassword.trim() == confirmPassword.trim()) {
+                            onConfirm(currentPassword, newPassword, confirmPassword)
+                        } else {
+                            showPasswordMismatchError = true
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Complementary),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(

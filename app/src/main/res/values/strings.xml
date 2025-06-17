@@ -152,13 +152,24 @@
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
+
+    <string name="settings_change_password">Change Master Password</string>
+    <string name="settings_change_password_description">Update your account password</string>
+    <string name="settings_change_password_confirmation_title">Change Password</string>
+    <string name="settings_change_password_current">Current Password</string>
+    <string name="settings_change_password_new">New Password</string>
+    <string name="settings_change_password_confirm">Confirm New Password</string>
+    <string name="settings_change_password_error_mismatch">Passwords doesn't match</string>
+
     <string name="settings_nuke">Nuke</string>
     <string name="settings_nuke_description">Delete your account and all data permanently</string>
     <string name="settings_nuke_confirmation_title">Nuke Account</string>
     <string name="settings_nuke_confirmation_message">This will permanently delete your account and all your data. This action cannot be undone.</string>
+
     <string name="settings_disconnect">Disconnect</string>
     <string name="settings_disconnect_description">Disconnect your account and remove all data</string>
     <string name="settings_disconnect_confirmation_title">Disconnect Account</string>
+
     <string name="settings_delete_all_passwords">Delete All Passwords</string>
     <string name="settings_delete_all_passwords_description">Delete all your saved passwords permanently</string>
     <string name="settings_delete_all_passwords_confirmation_title">Delete All Passwords</string>
