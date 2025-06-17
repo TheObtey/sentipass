@@ -92,7 +92,7 @@ fun RegisterScreen(
                 style = AppNameTextStyle
             )
 
-            Spacer(modifier = Modifier.height(64.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
                 value = username,
@@ -207,7 +207,7 @@ fun RegisterScreen(
                     .padding(horizontal = 16.dp)
             )
 
-            Spacer(modifier = Modifier.height(64.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
@@ -274,6 +274,7 @@ fun RegisterScreen(
                 } else {
                     Text(
                         text = "GET STARTED",
+                        style = TitleTextStyle,
                         color = White
                     )
                 }

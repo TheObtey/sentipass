@@ -14,17 +14,15 @@ import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.ui.theme.HeaderTextStyle
 
 @Composable
-fun HeaderSection(
-    onProfileClick: () -> Unit = {}
-) {
+fun HeaderSection() {
     Spacer(modifier = Modifier.height(42.dp))
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(verticalAlignment =  Alignment.CenterVertically) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.logo),
                 contentDescription = "App Logo",
@@ -36,14 +34,6 @@ fun HeaderSection(
             androidx.compose.material3.Text(
                 text = stringResource(R.string.app_name),
                 style = HeaderTextStyle
-            )
-        }
-
-        IconButton(onClick = onProfileClick) {
-            Image(
-                painter = painterResource(R.drawable.ic_user),
-                contentDescription = "Profile",
-                modifier = Modifier.size(48.dp)
             )
         }
     }

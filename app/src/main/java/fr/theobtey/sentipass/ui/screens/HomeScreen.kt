@@ -1,30 +1,30 @@
 package fr.theobtey.sentipass.ui.screens
 
 import android.content.Context
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import fr.theobtey.sentipass.R
 import fr.theobtey.sentipass.data.model.PasswordResponse
-import fr.theobtey.sentipass.data.network.RetrofitClient
 import fr.theobtey.sentipass.repository.PasswordRepository
 import fr.theobtey.sentipass.ui.components.*
 import fr.theobtey.sentipass.ui.theme.*
 import fr.theobtey.sentipass.viewmodel.PasswordViewModel
-import androidx.navigation.NavController
+import fr.theobtey.sentipass.data.network.RetrofitClient
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 
@@ -37,16 +37,14 @@ fun HomeScreen(
     val passwordViewModel = remember { PasswordViewModel(repository) }
     var showAddPasswordDialog by remember { mutableStateOf(false) }
     var selectedPassword by remember { mutableStateOf<PasswordResponse?>(null) }
-    var showCategories by remember { mutableStateOf(true) }
-    var showDisconnectDialog by remember { mutableStateOf(false) }
+    var showCategories by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
-    val context = LocalContext.current
+    val passwords by passwordViewModel.passwords.collectAsState()
 
     LaunchedEffect(Unit) {
         passwordViewModel.fetchPasswords(token)
     }
 
-    val passwords by passwordViewModel.passwords.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -57,7 +55,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            HeaderSection(onProfileClick = { showDisconnectDialog = true })
+            HeaderSection()
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -120,27 +118,6 @@ fun HomeScreen(
                 onEdit = { password -> println("Éditer le mot de passe : ${password.service}") },
                 viewModel = passwordViewModel,
                 token = token
-            )
-        }
-        if (showDisconnectDialog) {
-            DisconnectDialog(
-                onDismiss = { showDisconnectDialog = false },
-                onDisconnect = {
-                    // Remove all data from EncryptedSharedPreferences
-                    val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-                    val sharedPreferences = EncryptedSharedPreferences.create(
-                        "sentipass_prefs",
-                        masterKeyAlias,
-                        context,
-                        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                    )
-                    sharedPreferences.edit().clear().apply()
-                    // Navigate to login
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
             )
         }
     }
